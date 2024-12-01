@@ -33,38 +33,52 @@ public class KetToan implements Comparable<KetToan> {
         this.ngayKetThuc = ngayKetThuc;
         this.bangKiemTien = bangKiemTien;
         this.listHoaDon = listHoaDon;
+        setDoanhThu();
+        setAtm();
+        setTienLayRa();
+        setChenhLech();
     }
 
     public double getDoanhThu() {
         return doanhThu;
     }
 
-    public void setDoanhThu(double doanhThu) {
-        this.doanhThu = doanhThu;
+    public void setDoanhThu() {
+        double sum = 0;
+        for (HoaDon hd : listHoaDon) {
+            sum += hd.getTongTien();
+        }
+        this.doanhThu = sum;
     }
 
     public double getAtm() {
         return atm;
     }
 
-    public void setAtm(double atm) {
-        this.atm = atm;
+    public void setAtm() {
+        double sum  =0;
+        for (HoaDon hd : listHoaDon) {
+                if(hd.isAtm()){
+                    sum += hd.getTongTien();
+                }
+        }
+        this.atm = sum;
     }
 
     public double getTienLayRa() {
         return tienLayRa;
     }
 
-    public void setTienLayRa(double tienLayRa) {
-        this.tienLayRa = tienLayRa;
+    public void setTienLayRa() {
+        this.tienLayRa = this.doanhThu - this.atm;
     }
 
     public double getChenhLech() {
         return chenhLech;
     }
 
-    public void setChenhLech(double chenhLech) {
-        this.chenhLech = chenhLech;
+    public void setChenhLech() {
+        this.chenhLech = bangKiemTien.getTongTien() - this.tienLayRa - 1765000;
     }
 
     public KetToan(Date ngayKetThuc) {

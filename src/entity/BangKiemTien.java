@@ -36,6 +36,7 @@ public class BangKiemTien implements Comparable<BangKiemTien> {
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
         this.listChiTietBangKiemTien = listChiTietBangKiemTien;
+        setTongTien();
     }
 
     public String getMaBangKiemTien() {
@@ -90,8 +91,12 @@ public class BangKiemTien implements Comparable<BangKiemTien> {
         return tongTien;
     }
 
-    public void setTongTien(double tongTien) {
-        this.tongTien = tongTien;
+    public void setTongTien() {
+        double sum = 0;
+        for (KiemTien ct : listKiemTien) {
+            sum += ct.getTong();
+        }
+        this.tongTien = sum;
     }
 
     @Override

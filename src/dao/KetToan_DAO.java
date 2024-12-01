@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Main;
 import raven.toast.Notifications;
+import utilities.AcountingVoucherPrinter;
 import utilities.ConvertDate;
 //import utilities.ConvertDate;
 
@@ -50,13 +51,13 @@ public class KetToan_DAO {
             if (resultSet.next()) {
 
                 Timestamp diemBatDau = resultSet.getTimestamp("ngayBatDau");
-                Timestamp diemKetThuc = resultSet.getTimestamp("ngayKetKhuc");
+                Timestamp diemKetThuc = resultSet.getTimestamp("ngayKetThuc");
 
                 Date ngayBatDau = new java.sql.Date(diemBatDau.getTime());
                 Date ngayKetThuc = new java.sql.Date(diemKetThuc.getTime());
                 String maBangKiemTien = resultSet.getString("maBangKiemTien");
 
-//                ketToan = new KetToan(maKetToan, ngayBatDau, ngayKetThuc, BangKiemTien_DAO.getOne(maBangKiemTien), new HoaDon_DAO().getAllOrderInAcountingVoucher(maKetToan));
+                ketToan = new KetToan(maKetToan, ngayBatDau, ngayKetThuc, bangKiemTien_DAO.getOne(maBangKiemTien), hoaDon_DAO.getAllOrderInAcountingVoucher(maKetToan));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,7 +221,7 @@ public class KetToan_DAO {
         create(ketToan);
 
         for (HoaDon hoaDon : listHoaDon) {
-//            hoaDon_DAO.updateOrderAcountingVoucher(hoaDon.getMaHD(), KetToan.getMaKetToan());
+            if (hoaDon_DAO.updateOrderAcountingVoucher(hoaDon.getMaHD(), ketToan.getMaKetToan()));
         }
         Notifications.getInstance().show(Notifications.Type.SUCCESS, "Tạo phiếu kết toán thành công");
         try {
@@ -229,7 +230,19 @@ public class KetToan_DAO {
         } catch (SQLException ex) {
             Logger.getLogger(KetToan_DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        generatePDF(KetToan_DAO.getOne(ma));
+        generatePDF(this.getOne(ma));
 
+    }
+
+    public void generatePDF(KetToan KetToan) {
+//        tạo file pdf và hiển thị + in file pdf đó
+        AcountingVoucherPrinter printer = new AcountingVoucherPrinter(KetToan);
+        printer.generatePDF();
+        AcountingVoucherPrinter.PrintStatus status = printer.printFile();
+        if (status == AcountingVoucherPrinter.PrintStatus.NOT_FOUND_FILE) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi không thể in hóa đơn: Không tìm thấy file");
+        } else if (status == AcountingVoucherPrinter.PrintStatus.NOT_FOUND_PRINTER) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi không thể in hóa đơn: Không tìm thấy máy in");
+        }
     }
 }

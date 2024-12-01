@@ -37,7 +37,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
     /**
      * Creates new form KetToan_GUI
      */
-    private DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel tblModelDemTien = new DefaultTableModel();
     private double sum = 0;
     private NhanVien nv2;
     private KetToan_DAO ketToan_DAO = new KetToan_DAO();
@@ -48,6 +48,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
     private BangKiemTien_DAO bangKiemTien_DAO = new BangKiemTien_DAO();
     private TaiKhoan tk;
     private NhanVien nv;
+    private NhanVien_DAO nv_DAO;
 
     double doanhThu = 0;
     double atm = 0;
@@ -55,10 +56,11 @@ public class KetToan_GUI extends javax.swing.JPanel {
     double chenhLech = 0;
 
     public KetToan_GUI(TaiKhoan tk) {
-        initTableModel();
         initComponents();
+        initTableModel();
         initForm();
         alterTable();
+        nv_DAO = new NhanVien_DAO();
         this.tk = tk;
         nv = new NhanVien_DAO().getNhanVien(tk.getNhanVien().getMaNhanVien());
         tbl_demTien.getModel().addTableModelListener(new TableModelListener() {
@@ -83,6 +85,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
 
 //                        Notifications.getInstance().show(Notifications.Type.ERROR, "Số lượng không hợp lệ!");
                         sum = ketToan_DAO.getTong(getGiaTriTrongBang());
+
                         jtf_chenhLech.setText(FormatNumber.toVND(sum - tienLayRa - 1765000));
                         jtf_tongTien.setText(FormatNumber.toVND(sum));
                         jtf_tienMat.setText(FormatNumber.toVND(sum));
@@ -95,12 +98,12 @@ public class KetToan_GUI extends javax.swing.JPanel {
             }
 
         });
-        jtf_nhanVien1.setText(nv.getMaNhanVien()+" - "+nv.getTenNhanVien());
+        jtf_nhanVien1.setText(nv.getMaNhanVien() + " - " + nv.getTenNhanVien());
     }
 
     public void initTableModel() {
         // Products
-        model = new DefaultTableModel(new Object[]{"STT", "Mệnh giá", "Số lượng", "Tổng"
+        tblModelDemTien = new DefaultTableModel(new Object[]{"STT", "Mệnh giá", "Số lượng", "Tổng"
         }, 0);
     }
 
@@ -150,7 +153,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
                 soLuongStr = (String) model.getValueAt(i, 2);
             } catch (Exception e) {
             }
-            double giaTri = Double.parseDouble(giaTriStr);
+            double giaTri = Double.parseDouble(giaTriStr.replace(".", "").replace(",", "."));
             int soLuong;
             if (soLuongStr == null || soLuongStr.equals("0")) {
                 soLuong = 0;
@@ -160,6 +163,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
             if (soLuong > 0) {
                 listKiemTien.add(new KiemTien(soLuong, giaTri));
             }
+
         }
         return listKiemTien;
     }
@@ -276,7 +280,7 @@ public class KetToan_GUI extends javax.swing.JPanel {
 
         jtf_ngayGio.setText("Ngày và giờ");
         jtf_ngayGio.setEnabled(false);
-        jPanel2.add(jtf_ngayGio, new org.netbeans.lib.awtextra.AbsoluteConstraints(111, 30, 301, 32));
+        jPanel2.add(jtf_ngayGio, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 30, 250, 32));
 
         jLabel2.setText("Mã phiếu:");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 80, 168, 31));
@@ -314,6 +318,17 @@ public class KetToan_GUI extends javax.swing.JPanel {
         jtf_nhanVien1.setText("Mã nhân viên - Tên nhân viên");
         jtf_nhanVien1.setEnabled(false);
         jPanel2.add(jtf_nhanVien1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 250, 30));
+
+        jtf_nhanVien2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtf_nhanVien2ActionPerformed(evt);
+            }
+        });
+        jtf_nhanVien2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtf_nhanVien2KeyPressed(evt);
+            }
+        });
         jPanel2.add(jtf_nhanVien2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 250, 30));
 
         jtf_tienMat.setEnabled(false);
@@ -387,6 +402,18 @@ public class KetToan_GUI extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Kết toán thất bại!");
         }
     }//GEN-LAST:event_btn_ketToanActionPerformed
+
+    private void jtf_nhanVien2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_nhanVien2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtf_nhanVien2ActionPerformed
+
+    private void jtf_nhanVien2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_nhanVien2KeyPressed
+        if (evt.getKeyCode() == 10) {
+            String maNhanVien2 = jtf_nhanVien2.getText().trim();
+            nv2 = nv_DAO.getNhanVien(maNhanVien2);
+            jtf_nhanVien2.setText(nv2.getMaNhanVien() + " - " + nv2.getTenNhanVien());
+        }
+    }//GEN-LAST:event_jtf_nhanVien2KeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

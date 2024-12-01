@@ -5,15 +5,60 @@ import java.util.ArrayList;
 
 public class HoaDon {
 
+    public HoaDon(String maHD, LocalDate ngayLap, double tongTien, Voucher voucher, KhachHang khachHang, NhanVien nhanVien, KetToan ketToan, ArrayList<ChiTietHoaDon> listCTHD, boolean atm, double tienDaDua, boolean trangThai) {
+        this.maHD = maHD;
+        this.ngayLap = ngayLap;
+        this.tongTien = tongTien;
+        this.voucher = voucher;
+        this.khachHang = khachHang;
+        this.nhanVien = nhanVien;
+        this.ketToan = ketToan;
+        this.listCTHD = listCTHD;
+        this.atm = atm;
+        this.tienDaDua = tienDaDua;
+        this.trangThai = trangThai;
+    }
+
     private String maHD;
     private LocalDate ngayLap;
     private double tongTien;
     private Voucher voucher;
     private KhachHang khachHang;
     private NhanVien nhanVien;
+    private KetToan ketToan;
     private ArrayList<ChiTietHoaDon> listCTHD;
     private boolean atm;
     private double tienDaDua;
+    private boolean trangThai;
+
+    public KetToan getKetToan() {
+        return ketToan;
+    }
+
+    public void setKetToan(KetToan ketToan) {
+        this.ketToan = ketToan;
+    }
+
+    public HoaDon(String maHD, LocalDate ngayLap, double tongTien, Voucher voucher, KhachHang khachHang, NhanVien nhanVien, boolean atm, double tienDaDua, boolean trangThai) {
+        this.maHD = maHD;
+        this.ngayLap = ngayLap;
+        this.tongTien = tongTien;
+        this.voucher = voucher;
+        this.khachHang = khachHang;
+        this.nhanVien = nhanVien;
+        this.listCTHD = listCTHD;
+        this.atm = atm;
+        this.tienDaDua = tienDaDua;
+        this.trangThai = trangThai;
+    }
+
+    public boolean isTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
+    }
 
     public ArrayList<ChiTietHoaDon> getListCTHD() {
         return listCTHD;
@@ -51,6 +96,16 @@ public class HoaDon {
         this.voucher = voucher;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
+    }
+
+    public HoaDon(String maHD, LocalDate ngayLap, double tongTien, Voucher voucher, KhachHang khachHang, NhanVien nhanVien, ArrayList<ChiTietHoaDon> listCTHD, boolean atm, double tienDaDua, boolean trangThai) {
+        this.maHD = maHD;
+        this.ngayLap = ngayLap;
+        this.tongTien = tongTien;
+        this.voucher = voucher;
+        this.khachHang = khachHang;
+        this.nhanVien = nhanVien;
+        this.listCTHD = listCTHD;
     }
 
     public HoaDon(String maHD, LocalDate ngayLap, double tongTien, Voucher voucher, KhachHang khachHang, NhanVien nhanVien, ArrayList<ChiTietHoaDon> listCTHD) {

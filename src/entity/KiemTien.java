@@ -18,9 +18,9 @@ public class KiemTien {
     }
 
     public KiemTien(int soLuong, double giaTri) {
-        this.soLuong = soLuong;
-        this.giaTri = giaTri;
-        this.tong = tong;
+        setSoLuong(soLuong);
+        setGiaTri(giaTri);
+        setTong();
     }
 
     public int getSoLuong() {
@@ -43,7 +43,7 @@ public class KiemTien {
         this.giaTri = giaTri;
     }
 
-    public void setTong(double tong) {
+    public void setTong() {
         this.tong = this.giaTri * this.soLuong;
     }
     

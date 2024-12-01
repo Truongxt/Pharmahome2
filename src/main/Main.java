@@ -114,6 +114,10 @@ public class Main extends javax.swing.JFrame {
         return animator;
     }
 
+    public static void refeshOrder() {
+        main.showForm(new Order_GUI(tk));
+    }
+
     public void setAnimator(Animator animator) {
         this.animator = animator;
     }
@@ -160,18 +164,19 @@ public class Main extends javax.swing.JFrame {
     private MigLayout layout;
     private Menu menu;
     private Header header;
-    private MainForm main;
+    private static MainForm main;
     private Animator animator;
     private LoginForm loginForm;
-    private TaiKhoan tk;
+    public static TaiKhoan tk;
     private VaiTro vaiTro;
     private NhanVien nhanVien;
+    public static Main app;
 
     public Main() throws SQLException {
         initComponents();
         loginForm = new LoginForm();
 
-        setSize(new Dimension(1350, 768));
+        setSize(new Dimension(1350, 738));
         setTitle("Pharmahome");
         setContentPane(loginForm);
         // Thêm listener cho sự kiện đăng nhập
@@ -401,6 +406,12 @@ public class Main extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                try {
+                    app = new Main();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
 
         });

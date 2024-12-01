@@ -4,7 +4,10 @@
  */
 package gui;
 
+import dao.BangKiemTien_DAO;
 import dao.DanhSachPhieuKetToan_DAO;
+import dao.HoaDon_DAO;
+import entity.BangKiemTien;
 import entity.KetToan;
 import entity.NhanVien;
 import java.text.SimpleDateFormat;
@@ -29,8 +32,9 @@ public class DanhSachPhieuKetToan_GUI extends javax.swing.JPanel {
      * Creates new form DanhSachPhieuKetToan
      */
     public DanhSachPhieuKetToan_GUI() {
-        initTableModel();
         initComponents();
+        initTableModel();
+
         alterTable();
         renderCustomerTable(danhSachPhieuKetToan_DAO.getAll());
     }
@@ -49,10 +53,14 @@ public class DanhSachPhieuKetToan_GUI extends javax.swing.JPanel {
         for (KetToan ketToan : list) {
             String id = ketToan.getMaKetToan();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            System.out.println(ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(0));
             NhanVien nv1 = ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(0).getNhanVien();
             NhanVien nv2 = ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(1).getNhanVien();
             Date ngayBatDau = ketToan.getNgayBatDau();
             Date ngayKetThuc = ketToan.getNgayKetThuc();
+            ketToan.setListHoaDon(new HoaDon_DAO().getAllOrderInAcountingVoucher(id));
+            ketToan.setBangKiemTien(new BangKiemTien_DAO().getOne(ketToan.getBangKiemTien().getMaBangKiemTien()));
+            
             Object[] row = new Object[]{id, nv1.getMaNhanVien(), nv2.getMaNhanVien(), formatter.format(ngayBatDau), formatter.format(ngayKetThuc), utilities.FormatNumber.toVND(ketToan.getDoanhThu()), utilities.FormatNumber.toVND(ketToan.getBangKiemTien().getTongTien()), utilities.FormatNumber.toVND(ketToan.getAtm()), utilities.FormatNumber.toVND(ketToan.getChenhLech())};
             model.addRow(row);
         }
@@ -61,6 +69,7 @@ public class DanhSachPhieuKetToan_GUI extends javax.swing.JPanel {
     public void initTableModel() {
         model = new DefaultTableModel(new String[]{"Mã", "Người kiểm", "Đồng kiểm", "Bắt đầu", "Kết thúc", "Doanh thu", "Tiền mặt", "Thanh toán qua ATM", "Chênh lệch"
         }, 0);
+        tbl_danhSachPhieuKetToan.setModel(model);
     }
 
     /**

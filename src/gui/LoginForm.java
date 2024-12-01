@@ -7,21 +7,14 @@ package gui;
 import connect.ConnectDB;
 import dao.TaiKhoan_DAO;
 import entity.TaiKhoan;
-import gui.main.MainForm;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import utilities.PasswordHash;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import main.Main;
+
 
 /**
  *
@@ -156,7 +149,11 @@ public class LoginForm extends javax.swing.JPanel {
     private void btn_DangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DangNhapActionPerformed
         userName = txtTaiKhoan.getText();
         password = txtMatKhau.getText();
-        tk = checkLogin(userName, password);
+        try {
+            tk = checkLogin(userName, password);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (tk != null) {
             loginListener.onLoginSuccess(tk);
 
@@ -165,14 +162,16 @@ public class LoginForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_DangNhapActionPerformed
 
-    private TaiKhoan checkLogin(String username, String password) {
-        for (TaiKhoan tk : Listtk) {
-            if (tk.getTen().equalsIgnoreCase(username) && tk.getPassword().equalsIgnoreCase(password)) {
-                return tk;
-            }
+    private TaiKhoan checkLogin(String username, String password) throws NoSuchAlgorithmException {
+    String hashedPassword = hashPassword(password); // Băm mật khẩu nhập vào
+    for (TaiKhoan tk : Listtk) {
+        if (tk.getTen().equalsIgnoreCase(username) && tk.getPassword().equals(hashedPassword)) {
+            return tk;
         }
-        return null;
     }
+    return null;
+}
+
 
     public interface LoginListener {
 
@@ -180,6 +179,22 @@ public class LoginForm extends javax.swing.JPanel {
 
         void onLoginFailure();
     }
+    public String hashPassword(String password) {
+    try {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(password.getBytes());
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_DangNhap;

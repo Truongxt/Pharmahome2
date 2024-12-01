@@ -14,15 +14,15 @@ import java.time.YearMonth;
 public class ChiTietHoaDon_DAO {
 
     // Phương thức tạo mới một đối tượng ChiTietHoaDon
-    public Boolean create(ChiTietHoaDon chiTiet) {
+    public boolean create(ChiTietHoaDon chiTiet) {
         int n = 0;
 
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("INSERT INTO ChiTietHoaDon VALUES (?,?,?,?)");
-            ps.setInt(1, chiTiet.getSoLuong());
-            ps.setDouble(2, chiTiet.getDonGia());
-            ps.setString(3, chiTiet.getThuoc().getMaThuoc());  // Giả sử Thuoc có phương thức getMaThuoc()
-            ps.setString(4, chiTiet.getHoaDon().getMaHD()); // Giả sử HoaDon có phương thức getMaHoaDon()
+            ps.setString(1, chiTiet.getHoaDon().getMaHD());
+            ps.setString(2, chiTiet.getThuoc().getMaThuoc());
+            ps.setInt(3, chiTiet.getSoLuong());
+            ps.setDouble(4, chiTiet.getDonGia());
             n = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -60,7 +60,7 @@ public class ChiTietBangKiemTien_DAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                boolean chiSo = resultSet.getBoolean("chiSo");
+                boolean chiSo = resultSet.getBoolean("chiSoKiem");
                 String maNhanVien = resultSet.getString("maNhanVien");
 
                 NhanVien nhanVien = nhanVien_DAO.getNhanVien(maNhanVien);
@@ -78,7 +78,7 @@ public class ChiTietBangKiemTien_DAO {
 
     public Boolean create(ChiTietBangKiemTien chiTietBangKiemTien) {
         try {
-            String sql = "INSERT INTO CashCountSheetDetail (auditorIndex, cashCountSheetID, employeeID) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO ChiTietBangKiemTien (chiSoKiem, maBangKiemTien, maNhanVien) VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = ConnectDB.conn.prepareStatement(sql);
 
             preparedStatement.setBoolean(1, chiTietBangKiemTien.getChiSo());
