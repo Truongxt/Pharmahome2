@@ -14,14 +14,30 @@ import dao.HoaDon_DAO;
 import entity.ThangVaDoanhThu;
 import gui.chart.ModelChart;
 import java.awt.Color;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.Icon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import raven.toast.Notifications;
 
 
 public class ThongKeDoanhThu extends javax.swing.JPanel {
@@ -272,7 +288,14 @@ public class ThongKeDoanhThu extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Lưu file Excel");
+    int userSelection = fileChooser.showSaveDialog(null);
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        String filePath = fileChooser.getSelectedFile().getAbsolutePath() + ".xlsx";
+        xuatTableRaExcel(jTable1, filePath);
+         Notifications.getInstance().show(Notifications.Type.SUCCESS,  "Xuất file excel thành công!!!");
+    }
     }//GEN-LAST:event_btnExcelActionPerformed
 
     private void btnNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNgayActionPerformed
@@ -521,6 +544,62 @@ public class ThongKeDoanhThu extends javax.swing.JPanel {
         e.printStackTrace(); // In ra lỗi nếu có
     }
     }
+    
+public static void xuatTableRaExcel(JTable table, String filePath) {
+    Workbook workbook = new XSSFWorkbook();
+    Sheet sheet = workbook.createSheet("Thong Ke Doanh Thu");
+
+    // Tạo tiêu đề
+    Row titleRow = sheet.createRow(0);
+    Cell titleCell = titleRow.createCell(0);
+    titleCell.setCellValue("Thống kê doanh thu từ bảng");
+    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, table.getColumnCount() - 1));
+
+    CellStyle titleStyle = workbook.createCellStyle();
+    Font titleFont = workbook.createFont();
+    titleFont.setFontHeightInPoints((short) 16);
+    titleFont.setBold(true);
+    titleStyle.setFont(titleFont);
+    titleStyle.setAlignment(HorizontalAlignment.CENTER);
+    titleCell.setCellStyle(titleStyle);
+
+    // Thêm dòng ngày in
+    Row dateRow = sheet.createRow(1);
+    Cell dateCell = dateRow.createCell(0);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    dateCell.setCellValue("Ngày in: " + sdf.format(new java.util.Date()));
+
+    // Thêm tiêu đề cột từ JTable
+    Row headerRow = sheet.createRow(2);
+    for (int i = 0; i < table.getColumnCount(); i++) {
+        Cell cell = headerRow.createCell(i);
+        cell.setCellValue(table.getColumnName(i));
+    }
+
+    // Thêm dữ liệu từ JTable
+    int rowCount = table.getRowCount();
+    int rowNum = 3;
+    for (int i = 0; i < rowCount; i++) {
+        Row row = sheet.createRow(rowNum++);
+        for (int j = 0; j < table.getColumnCount(); j++) {
+            Cell cell = row.createCell(j);
+            Object value = table.getValueAt(i, j);
+            if (value instanceof Number) {
+                cell.setCellValue(((Number) value).doubleValue());
+            } else {
+                cell.setCellValue(value != null ? value.toString() : "");
+            }
+        }
+    }
+
+    // Ghi file
+    try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+        workbook.write(outputStream);
+        workbook.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcel;
     private javax.swing.JButton btnNgay;

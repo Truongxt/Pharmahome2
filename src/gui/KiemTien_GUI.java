@@ -36,7 +36,7 @@ public class KiemTien_GUI extends javax.swing.JPanel {
     /**
      * Creates new form KiemTien_GUI
      */
-    private DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel tblModelDemTien = new DefaultTableModel();
     private double sum = 0;
     private NhanVien nv2;
     private Date ngayTao = new Date();
@@ -45,12 +45,14 @@ public class KiemTien_GUI extends javax.swing.JPanel {
     double chenhLech = 0;
     private TaiKhoan tk;
     private NhanVien nv;
+    private NhanVien_DAO nv_DAO;
 
     public KiemTien_GUI(TaiKhoan tk) {
         initComponents();
         initTableModel();
         initForm(nv);
         alterTable();
+        nv_DAO = new NhanVien_DAO();
         this.tk = tk;
         nv = new NhanVien_DAO().getNhanVien(tk.getNhanVien().getMaNhanVien());
         tbl_demTien.getModel().addTableModelListener(new TableModelListener() {
@@ -92,7 +94,7 @@ public class KiemTien_GUI extends javax.swing.JPanel {
 
     public void initTableModel() {
         // Products
-        model = new DefaultTableModel(new Object[]{"STT", "Mệnh giá", "Số lượng", "Tổng"
+        tblModelDemTien = new DefaultTableModel(new Object[]{"STT", "Mệnh giá", "Số lượng", "Tổng"
         }, 0);
     }
 
@@ -134,7 +136,7 @@ public class KiemTien_GUI extends javax.swing.JPanel {
                 soLuongStr = (String) model.getValueAt(i, 2);
             } catch (Exception e) {
             }
-            double giaTri = Double.parseDouble(giaTriStr);
+            double giaTri = Double.parseDouble(giaTriStr.replace(".", "").replace(",", "."));
             int soLuong;
             if (soLuongStr == null || soLuongStr.equals("0")) {
                 soLuong = 0;
@@ -144,6 +146,7 @@ public class KiemTien_GUI extends javax.swing.JPanel {
             if (soLuong > 0) {
                 listKiemTien.add(new KiemTien(soLuong, giaTri));
             }
+
         }
         return listKiemTien;
     }
@@ -264,6 +267,12 @@ public class KiemTien_GUI extends javax.swing.JPanel {
 
         jtf_tenNhanVien1.setEnabled(false);
         jPanel2.add(jtf_tenNhanVien1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 220, 280, 33));
+
+        jtf_maNhanVien2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtf_maNhanVien2KeyPressed(evt);
+            }
+        });
         jPanel2.add(jtf_maNhanVien2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, 280, 33));
 
         jtf_chenhLech.setEnabled(false);
@@ -356,6 +365,22 @@ public class KiemTien_GUI extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btn_baoCaoActionPerformed
+
+    private void jtf_maNhanVien2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_maNhanVien2KeyPressed
+        if (evt.getKeyCode() == 10) {
+            String maNhanVien2 = jtf_maNhanVien2.getText().trim();
+            nv2 = nv_DAO.getNhanVien(maNhanVien2);
+            if (nv2 != null) {
+                Notifications.getInstance().show(Notifications.Type.INFO, "Thêm nhân viên thành công");
+                jtf_tenNhanVien2.setText(nv2.getTenNhanVien());
+
+            } else {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Không tìm thấy nhân viên");
+
+            }
+
+        }
+    }//GEN-LAST:event_jtf_maNhanVien2KeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -54,7 +54,7 @@ import utilities.ConvertDate;
  *
  * @author HÀ NHƯ
  */
-public class Employees_GUI extends javax.swing.JPanel {
+public class NhanVien_GUI extends javax.swing.JPanel {
 
     private NhanVien_DAO nv_Dao;
     private ArrayList<NhanVien> listNV;
@@ -62,7 +62,7 @@ public class Employees_GUI extends javax.swing.JPanel {
     private VaiTro_DAO vaiTro_DAO;
     private static CellStyle cellStyleFormatNumber = null;
 
-    public Employees_GUI() throws SQLException {
+    public NhanVien_GUI() throws SQLException {
         initComponents();
         ConnectDB.connect();
         nv_Dao = new NhanVien_DAO();
@@ -528,7 +528,7 @@ public class Employees_GUI extends javax.swing.JPanel {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Employees_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NhanVien_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_suaActionPerformed
 

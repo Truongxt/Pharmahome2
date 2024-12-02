@@ -18,8 +18,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import entity.ChiTietDoiTra;
 import entity.DoiTra;
-import enums.ReturnOrderStatus;
-import enums.TrangThaiDoiTra;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -31,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -45,10 +45,11 @@ import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Sides;
+import raven.toast.Notifications;
 
 /**
  *
- * @author Như Tâm
+ * @author Hà Như
  */
 public class ReturnOrderPrinter {
     private final DoiTra returnOrder;
@@ -70,7 +71,10 @@ public class ReturnOrderPrinter {
     }
 
     private String getVND(double number) {
-        return utilities.FormatNumber.toVND(number);
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(number);  
+
+
     }
 
     private void addTableHeader(PdfPTable table, Font font) {
@@ -104,7 +108,8 @@ public class ReturnOrderPrinter {
         }
 
         if (myService == null) {
-            throw new IllegalStateException("Printer not found");
+          //  throw new IllegalStateException("Printer not found");
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Printer not found");
         }
 
         try (FileInputStream fis = new FileInputStream(FILE_PATH)) {
@@ -211,27 +216,31 @@ public class ReturnOrderPrinter {
             addTableHeader(table, subHeadingFont);
 
             int index = 0;
-            for (ChiTietDoiTra detail : returnOrder.getListDetail()) {
+            double tongTien = 0.0;
+            
+            for ( ChiTietDoiTra detail : returnOrder.getListDetail()) {
                 PdfPCell cell = new PdfPCell(new Phrase(String.format("%d. %s", ++index, detail.getSanPham().getTenThuoc()), font));
                 cell.setColspan(4);
 
                 table.addCell(new PdfPCell(cell));
                 table.addCell(new PdfPCell(new Phrase(String.valueOf(detail.getSanPham().getThue()), font)));
 
-                PdfPCell priceCell = new PdfPCell(new Phrase(getVND(detail.getGia()), font));
+                PdfPCell priceCell = new PdfPCell(new Phrase(getVND(detail.getSanPham().getGia()), font));
                 table.addCell(priceCell);
 
                 table.addCell(new PdfPCell(new Phrase(String.valueOf(detail.getSoLuong()), font)));
-                table.addCell(new PdfPCell(new Phrase(getVND(detail.thanhTien()), font)));
-
+                table.addCell(new PdfPCell(new Phrase(getVND(((detail.getSanPham().getGia())*(detail.getSoLuong()))), font)));
+                
+                tongTien += (detail.getSanPham().getGia())*(detail.getSoLuong());
+                System.out.println(detail.getSoLuong());
             }
+             
 
             document.add(table);
 
-//            Order footer    
-            document.add(new Paragraph("Tổng tiền: " + getVND(returnOrder.getHoaDon().getTongTien()), font));
-            document.add(new Paragraph("Tiền hoàn: " + getVND(returnOrder.getTienTra()), subHeadingFont));
-            //document.add(new Paragraph("Thanh toán: " + getVND(order.getTotalDue()), subHeadingFont));
+            double tienHoan = returnOrder.isLoai() ? tongTien : 0; 
+            document.add(new Paragraph("Tổng tiền: " + getVND(tongTien), font));
+            document.add(new Paragraph("Tiền hoàn: " + getVND(tienHoan), subHeadingFont));
             document.add(separator);
 
             boolean type = returnOrder.isLoai();
@@ -240,14 +249,7 @@ public class ReturnOrderPrinter {
             else
                 document.add(new Paragraph("Loại đơn: Đơn đổi", font));
             document.add(new Paragraph("Lý do: " + returnOrder.getLiDO(), font));
-            TrangThaiDoiTra status = returnOrder.getTrangThai();
-            if(status.equals(ReturnOrderStatus.CANCEL)) 
-                document.add(new Paragraph("Trạng thái: Từ chối", subHeadingFont));
-            else if(status.equals(ReturnOrderStatus.SUCCESS))
-                document.add(new Paragraph("Trạng thái: Đồng ý", subHeadingFont));
-            else
-                document.add(new Paragraph("Trạng thái: Đang chờ", subHeadingFont));
-            
+  
 
 //            Footer
             document.add(separator);
@@ -286,4 +288,6 @@ public class ReturnOrderPrinter {
             e.printStackTrace();
         }
     }
+    
+    
 }

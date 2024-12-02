@@ -19,19 +19,18 @@ import dao.VaiTro_DAO;
 import entity.NhanVien;
 import entity.TaiKhoan;
 import entity.VaiTro;
-import gui.Customers_GUI;
+import gui.KhachHang_GUI;
 import gui.DanhSachPhieuKetToan_GUI;
 import gui.DanhSachPhieuKiemTien_GUI;
-import gui.Employees_GUI;
-import gui.KetCa;
+import gui.NhanVien_GUI;
 import gui.KetToan_GUI;
 import gui.KiemTien_GUI;
 import gui.LichSuHoaDon_GUI;
 import gui.LoginForm;
 import gui.NhaCungCap_GUI;
-import gui.Order_GUI;
-import gui.Products_GUI;
-import gui.Return_Order_GUI;
+import gui.HoaDon_GUI;
+import gui.Thuoc_GUI;
+import gui.DoiTra_GUI;
 import gui.ThongKeDoanhThu;
 import gui.ThongKeKhachHang;
 import gui.ThongKeThuoc;
@@ -115,7 +114,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public static void refeshOrder() {
-        main.showForm(new Order_GUI(tk));
+        main.showForm(new HoaDon_GUI(tk));
     }
 
     public void setAnimator(Animator animator) {
@@ -207,7 +206,7 @@ public class Main extends javax.swing.JFrame {
         initHeaderLabel();
         header = new Header(nhanVien.getTenNhanVien(), vaiTro.getTen(), this);
         main = new MainForm();
-        main.showForm(new Order_GUI(tk));
+        main.showForm(new HoaDon_GUI(tk));
 
         menu.addEvent(new EventMenuSelected() {
             @Override
@@ -215,15 +214,15 @@ public class Main extends javax.swing.JFrame {
 
                 if (menuIndex == 0) {
                     try {
-                        main.showForm(new Products_GUI());
+                        main.showForm(new Thuoc_GUI());
                     } catch (UnsupportedLookAndFeelException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (menuIndex == 1) {
                     if (subMenuIndex == 0) {
-                        main.showForm(new Order_GUI(tk));
+                        main.showForm(new HoaDon_GUI(tk));
                     } else if (subMenuIndex == 1) {
-                        main.showForm(new Return_Order_GUI(tk));
+                        main.showForm(new DoiTra_GUI(tk));
 
                     } else if (subMenuIndex == 2) {
                         main.showForm(new LichSuHoaDon_GUI());
@@ -258,11 +257,11 @@ public class Main extends javax.swing.JFrame {
                     }
 
                 } else if (menuIndex == 4) {
-                    main.showForm(new Customers_GUI());
+                    main.showForm(new KhachHang_GUI());
 
                 } else if (menuIndex == 5) {
                     try {
-                        main.showForm(new Employees_GUI());
+                        main.showForm(new NhanVien_GUI());
                     } catch (SQLException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }

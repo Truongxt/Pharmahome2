@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.ConvertDate;
@@ -600,5 +601,103 @@ public class HoaDon_DAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<HoaDon> getHoaDonSuggestions(String keyword) {
+        List<HoaDon> list = new ArrayList<>();
+        String query = "SELECT * FROM HoaDon WHERE maHD LIKE ?";
+        try {
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDon hd = new HoaDon(
+                        rs.getString("maHD")
+                );
+                list.add(hd);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    public ArrayList<HoaDon> orderListWithFilter(String orderID, String customerID, String phoneNumber, String priceFrom, String priceTo, java.util.Date orderFrom, java.util.Date orderTo) {
+        ArrayList<HoaDon> list = this.getAllHoaDon();
+        //for(Order order:list){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isTrangThai()== false) {
+                list.remove(i);
+            }
+        }
+        ArrayList<HoaDon> xoa = new ArrayList<>();
+
+        if (phoneNumber.trim().length() > 0) {
+            for (HoaDon order : list) {
+                HoaDon od = this.getHoaDon(order.getMaHD());
+                KhachHang ct = new KhachHang_DAO().getKhachHang(od.getKhachHang().getMaKH());
+                if (!ct.getSdt().equals(phoneNumber)) {
+                    xoa.add(order);
+                }
+            }
+            list.removeAll(xoa);
+        }
+        xoa.clear();
+        if (orderID.trim().length() > 0) {
+            for (HoaDon order : list) {
+                if (!order.getMaHD().equals(orderID)) {
+                    xoa.add(order);
+                }
+            }
+            list.removeAll(xoa);
+        }
+        xoa.clear();
+        if (customerID.trim().length() > 0) {
+
+            for (HoaDon order : list) {
+                if (!order.getKhachHang().getTenKhachHang().equals(customerID)) {
+                    xoa.add(order);
+                }
+            }
+            list.removeAll(xoa);
+        }
+        xoa.clear();
+        if (priceFrom.trim().length() > 0) {
+            for (HoaDon order : list) {
+                if (order.getTongTien()< Double.parseDouble(priceFrom)) {
+                    xoa.add(order);
+                }
+            }
+            list.removeAll(xoa);
+        }
+        xoa.clear();
+        if (priceTo.trim().length() > 0) {
+            for (HoaDon order : list) {
+                if (order.tinhThanhTien()> Double.parseDouble(priceTo)) {
+                    xoa.add(order);
+                }
+            }
+            list.removeAll(xoa);
+        }
+        xoa.clear();
+
+        for (HoaDon order : list) {
+            if (Date.valueOf(order.getNgayLap()).before(orderFrom)) {
+                xoa.add(order);
+            }
+        }
+        list.removeAll(xoa);
+
+        xoa.clear();
+
+        for (HoaDon order : list) {
+            if (Date.valueOf(order.getNgayLap()).after(orderTo)) {
+                xoa.add(order);
+            }
+        }
+        xoa.clear();
+        list.removeAll(xoa);
+
+        return list;
     }
 }

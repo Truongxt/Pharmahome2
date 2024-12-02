@@ -145,8 +145,8 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
 
         jDate_batDau.setPreferredSize(new java.awt.Dimension(214, 22));
 
-        btn_timKiem.setBackground(new java.awt.Color(102, 153, 255));
         btn_timKiem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btn_timKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/funnel.png"))); // NOI18N
         btn_timKiem.setText("Tìm kiếm");
         btn_timKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +154,6 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
             }
         });
 
-        btn_load.setBackground(new java.awt.Color(204, 204, 204));
         btn_load.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/reload_employee.png"))); // NOI18N
         btn_load.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,8 +161,7 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
             }
         });
 
-        xuatExcel.setBackground(new java.awt.Color(0, 153, 51));
-        xuatExcel.setText("Xuất Excel");
+        xuatExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/logo.png"))); // NOI18N
         xuatExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xuatExcelActionPerformed(evt);
@@ -420,6 +418,7 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
     }//GEN-LAST:event_txt_TongTienActionPerformed
 
     private void btn_loadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loadActionPerformed
+        modelHD.setRowCount(0);
         initHoaDon();
     }//GEN-LAST:event_btn_loadActionPerformed
 
@@ -437,6 +436,10 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
         }
         LocalDate ngayBatDau = ConvertDate.convert(jDate_batDau.getDate());
         LocalDate ngayKetThuc = ConvertDate.convert(jDate_ketThuc.getDate());
+        if(ngayBatDau.isAfter(ngayKetThuc)){
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Ngày bắt đầu phải trước ngày kết thúc");
+            return;
+        }
 
         ArrayList<HoaDon> filter = new HoaDon_DAO().filter(maHoaDon, sdt, doanhThu, ngayBatDau, ngayKetThuc);
         for (HoaDon hd : filter) {
@@ -500,11 +503,12 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
         int rowNum = 3;
         for (HoaDon order : list) {
             Row row = sheet.createRow(rowNum++);
-
             row.createCell(0).setCellValue(order.getMaHD());
-            row.createCell(1).setCellValue(order.getNhanVien().getTenNhanVien());
-            row.createCell(2).setCellValue(order.getKhachHang().getSdt());
+            row.createCell(1).setCellValue(order.getNhanVien().getMaNhanVien());
+            row.createCell(2).setCellValue(order.getKhachHang().getTenKhachHang());
             row.createCell(3).setCellValue(order.getNgayLap().toString());
+
+            row.createCell(4).setCellValue(order.getKhachHang().getSdt());
             row.createCell(5).setCellValue(FormatNumber.toVND(order.getTongTien()));
         }
 
@@ -531,51 +535,12 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Chọn đường dẫn và tên file");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (validateFields()) {
-            String priceFrom, priceTo;
-            String orderID = txt_orderID.getText();
-            String customerID = txt_customerID.getText();
-            String phone = txt_customerPhone.getText();
-            if (orderID.trim().length() <= 0 && customerID.trim().length() <= 0 && phone.trim().length() <= 0) {
-                if (JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất toàn bộ hoá đơn ?", "Xuất file excel", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    int userSelection = fileChooser.showSaveDialog(null);
-                    if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        // Lấy đường dẫn và tên file được chọn
-                        File fileToSave = fileChooser.getSelectedFile();
-                        String filePath = fileToSave.getAbsolutePath();
+        String priceFrom, priceTo;
+        String orderID = txt_maHoaDon.getText();
+        String phone = txt_SoDienThoai.getText();
 
-                        // Gọi phương thức để tạo file Excel với đường dẫn và tên file đã chọn
-                        createExcel(bus.getAll(), filePath + ".xlsx");
-                    }
-                }
-            }
-            if (cmb_orderPriceFilter.getSelectedIndex() == 0) {
-                priceFrom = "";
-                priceTo = "";
-            } else if (cmb_orderPriceFilter.getSelectedIndex() == 1) {
-                priceFrom = "";
-                priceTo = "100000";
-            } else if (cmb_orderPriceFilter.getSelectedIndex() == 2) {
-                priceFrom = "100000";
-                priceTo = "500000";
-            } else if (cmb_orderPriceFilter.getSelectedIndex() == 3) {
-                priceFrom = "500000";
-                priceTo = "1000000";
-            } else {
-                priceFrom = "1000000";
-                priceTo = "";
-            }
-
-            Date begin = jDateChooser1.getDate();
-            begin.setHours(0);
-            begin.setMinutes(0);
-            Date end = jDateChooser2.getDate();
-            end.setHours(23);
-            end.setMinutes(59);
-            ArrayList<Order> list = bus.orderListWithFilter(orderID, customerID, phone, priceFrom, priceTo, begin, end);
-            if (list.isEmpty()) {
-                Notifications.getInstance().show(Notifications.Type.INFO, "Không có hoá đơn !");
-            } else {
+        if (orderID.trim().length() <= 0 && phone.trim().length() <= 0) {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất toàn bộ hoá đơn ?", "Xuất file excel", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 int userSelection = fileChooser.showSaveDialog(null);
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     // Lấy đường dẫn và tên file được chọn
@@ -583,9 +548,46 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
                     String filePath = fileToSave.getAbsolutePath();
 
                     // Gọi phương thức để tạo file Excel với đường dẫn và tên file đã chọn
-                    createExcel(list, filePath + ".xlsx");
+                    createExcel(new HoaDon_DAO().getAllHoaDon(), filePath + ".xlsx");
                 }
             }
+//            if (jcb_doanhThu.getSelectedIndex() == 0) {
+//                priceFrom = "";
+//                priceTo = "";
+//            } else if (jcb_doanhThu.getSelectedIndex() == 1) {
+//                priceFrom = "";
+//                priceTo = "100000";
+//            } else if (jcb_doanhThu.getSelectedIndex() == 2) {
+//                priceFrom = "100000";
+//                priceTo = "500000";
+//            } else if (jcb_doanhThu.getSelectedIndex() == 3) {
+//                priceFrom = "500000";
+//                priceTo = "1000000";
+//            } else {
+//                priceFrom = "1000000";
+//                priceTo = "";
+//            }
+
+//            Date begin = jDate_batDau.getDate();
+//            begin.setHours(0);
+//            begin.setMinutes(0);
+//            Date end = jDate_ketThuc.getDate();
+//            end.setHours(23);
+//            end.setMinutes(59);
+//            ArrayList<HoaDon> list = new HoaDon_DAO().getAllHoaDon();
+//            if (list.isEmpty()) {
+//                Notifications.getInstance().show(Notifications.Type.INFO, "Không có hoá đơn !");
+//            } else {
+//                int userSelection = fileChooser.showSaveDialog(null);
+//                if (userSelection == JFileChooser.APPROVE_OPTION) {
+//                    // Lấy đường dẫn và tên file được chọn
+//                    File fileToSave = fileChooser.getSelectedFile();
+//                    String filePath = fileToSave.getAbsolutePath();
+//
+//                    // Gọi phương thức để tạo file Excel với đường dẫn và tên file đã chọn
+//                    createExcel(list, filePath + ".xlsx");
+//                }
+//            }
         }
     }//GEN-LAST:event_xuatExcelActionPerformed
 

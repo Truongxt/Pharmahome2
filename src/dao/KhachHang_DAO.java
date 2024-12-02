@@ -99,7 +99,7 @@ public class KhachHang_DAO {
         }
         return khachHang;
     }
-      public static KhachHang getKhachHang(String maKH) {
+      public  KhachHang getKhachHang(String maKH) {
         KhachHang khachHang = null;
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("SELECT * FROM KhachHang WHERE maKhachHang = ?");

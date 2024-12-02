@@ -411,7 +411,14 @@ public class KetToan_GUI extends javax.swing.JPanel {
         if (evt.getKeyCode() == 10) {
             String maNhanVien2 = jtf_nhanVien2.getText().trim();
             nv2 = nv_DAO.getNhanVien(maNhanVien2);
-            jtf_nhanVien2.setText(nv2.getMaNhanVien() + " - " + nv2.getTenNhanVien());
+            if (nv2 != null) {
+                Notifications.getInstance().show(Notifications.Type.INFO, "Thêm nhân viên thành công");
+                jtf_nhanVien2.setText(nv2.getMaNhanVien() + " - " + nv2.getTenNhanVien());
+
+            } else {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Không tìm thấy nhân viên");
+
+            }
         }
     }//GEN-LAST:event_jtf_nhanVien2KeyPressed
 

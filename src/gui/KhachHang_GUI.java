@@ -37,21 +37,23 @@ import utilities.SVGIcon;
  *
  * @author HÀ NHƯ
  */
-public class Customers_GUI extends javax.swing.JPanel {
+public class KhachHang_GUI extends javax.swing.JPanel {
 
     /**
-     * Creates new form Customers_GUI
+     * Creates new form KhachHang_GUI
      */
     private DefaultTableModel model;
     private ArrayList<KhachHang> listKH;
+    private KhachHang_DAO kh_DAO;
 
-    public Customers_GUI() {
+    public KhachHang_GUI() {
         initComponents();
         try {
             connect.ConnectDB.connect();
         } catch (SQLException ex) {
-            Logger.getLogger(Customers_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KhachHang_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        kh_DAO = new KhachHang_DAO();
         model = new DefaultTableModel(new String[]{"Mã khách hàng", "Tên khách hàng", "Điểm tích lũy", "Tổng tiền tích lũy"}, 0);
         tbl_khachHang.setModel(model);
         listKH = new KhachHang_DAO().getAllKhachHang();
@@ -442,7 +444,7 @@ public class Customers_GUI extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.SUCCESS, "Cập nhật thông tin khách hàng thành công!");
 
         } catch (Exception ex) {
-            Logger.getLogger(Customers_GUI.class
+            Logger.getLogger(KhachHang_GUI.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_capNhatActionPerformed
@@ -457,7 +459,7 @@ public class Customers_GUI extends javax.swing.JPanel {
         // TODO add your handling code here:
         int index = tbl_khachHang.getSelectedRow();
         String maKhachHang = tbl_khachHang.getValueAt(index, 0) + "";
-        KhachHang kh = KhachHang_DAO.getKhachHang(maKhachHang);
+        KhachHang kh = kh_DAO.getKhachHang(maKhachHang);
         jtf_maKhachHang.setText(tbl_khachHang.getValueAt(index, 0) + "");
         jtf_tenKhachHang.setText(tbl_khachHang.getValueAt(index, 1) + "");
         jtf_sdt.setText(kh.getSdt());

@@ -37,6 +37,7 @@ public class BangKiemTien implements Comparable<BangKiemTien> {
         this.ngayKetThuc = ngayKetThuc;
         this.listChiTietBangKiemTien = listChiTietBangKiemTien;
         setTongTien();
+        setChenhLech();
     }
 
     public String getMaBangKiemTien() {
@@ -83,8 +84,8 @@ public class BangKiemTien implements Comparable<BangKiemTien> {
         return chenhLech;
     }
 
-    public void setChenhLech(double chenhLech) {
-        this.chenhLech = chenhLech;
+    public void setChenhLech() {
+        this.chenhLech = this.tongTien - 1765000;
     }
 
     public double getTongTien() {

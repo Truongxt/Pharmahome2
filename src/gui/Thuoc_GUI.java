@@ -36,12 +36,12 @@ import javax.swing.JOptionPane;
 import raven.toast.Notifications;
 import java.util.Random;
 
-public class Products_GUI extends javax.swing.JPanel {
+public class Thuoc_GUI extends javax.swing.JPanel {
 
     private Thuoc_DAO thuoc_DAO;
     private DefaultTableModel model;
 
-    public Products_GUI() throws UnsupportedLookAndFeelException {
+    public Thuoc_GUI() throws UnsupportedLookAndFeelException {
         initComponents();
         thuoc_DAO = new Thuoc_DAO();
         model = new DefaultTableModel(new String[]{"Mã thuốc", "Tên Thuốc", "Loại", "Xuất xứ", "Giá", "Đơn vị", "Nsx", "Hsd", "Thuế"}, 0);

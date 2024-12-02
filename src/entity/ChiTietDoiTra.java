@@ -27,6 +27,8 @@ public class ChiTietDoiTra {
         this.soLuong = soLuong;
         this.gia = gia;
     }
+    
+    
 
     public ChiTietDoiTra(DoiTra doiTra, Thuoc sanPham) {
         this.doiTra = doiTra;
@@ -44,6 +46,8 @@ public class ChiTietDoiTra {
     public ChiTietDoiTra() {
     }
 
+    
+
     public DoiTra getDoiTra() {
         return doiTra;
     }
@@ -54,7 +58,7 @@ public class ChiTietDoiTra {
             throw new Exception(ORDERID_EMPTY);
         this.doiTra = doiTra;
     }
-
+    
     public Thuoc getSanPham() {
         return sanPham;
     }

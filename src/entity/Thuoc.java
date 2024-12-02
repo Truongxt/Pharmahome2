@@ -5,13 +5,16 @@ import java.util.Objects;
 
 public class Thuoc {
 
+    public Thuoc(String maThuoc, String tenThuoc, double gia) {
+        this.maThuoc = maThuoc;
+        this.tenThuoc = tenThuoc;
+        this.gia = gia;
+    }
+
     public String getMaThuoc() {
         return maThuoc;
     }
 
-
-
-   
     public String getTenThuoc() {
         return tenThuoc;
     }
@@ -163,19 +166,18 @@ public class Thuoc {
         this.ncc = ncc;
     }
 
-
-	private String maThuoc;
-	private String tenThuoc;
-	private double gia;
-	private LocalDate hsd;
-	private LocalDate nsx;
-	private double thue;
-	private int soLuongTon;
-	private String mota;
-        private LoaiThuoc loaiThuoc;
-        private XuatXu xuatXu;
-        private DonViTinh donViTinh;
-        private NhaCungCap ncc;
+    private String maThuoc;
+    private String tenThuoc;
+    private double gia;
+    private LocalDate hsd;
+    private LocalDate nsx;
+    private double thue;
+    private int soLuongTon;
+    private String mota;
+    private LoaiThuoc loaiThuoc;
+    private XuatXu xuatXu;
+    private DonViTinh donViTinh;
+    private NhaCungCap ncc;
 //        private GiamGia giamGia;
 
     @Override
@@ -219,6 +221,5 @@ public class Thuoc {
     public Thuoc(String maThuoc) {
         this.maThuoc = maThuoc;
     }
-        
-    
+
 }

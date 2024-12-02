@@ -5,14 +5,13 @@
 package gui.main;
 
 import entity.TaiKhoan;
-import gui.Customers_GUI;
-import gui.Employees_GUI;
-import gui.KetCa;
+import gui.KhachHang_GUI;
+import gui.NhanVien_GUI;
 import gui.LoginForm;
 import gui.NhaCungCap_GUI;
-import gui.Order_GUI;
-import gui.Products_GUI;
-import gui.Return_Order_GUI;
+import gui.HoaDon_GUI;
+import gui.Thuoc_GUI;
+import gui.DoiTra_GUI;
 import gui.ThongKeDoanhThu;
 import gui.ThongKeKhachHang;
 import gui.event.EventMenuSelected;
@@ -93,15 +92,15 @@ public class MainForm extends javax.swing.JPanel {
 //                System.out.println("Menu index: " + menuIndex + "Sub Index: " + subMenuIndex);
 //                if (menuIndex == 0) {
 //                    try {
-//                        main.showForm(new Products_GUI());
+//                        main.showForm(new Thuoc_GUI());
 //                    } catch (UnsupportedLookAndFeelException ex) {
 //                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
 //                } else if (menuIndex == 1) {
 //                    if (subMenuIndex == 0) {
-//                        main.showForm(new Order_GUI());
+//                        main.showForm(new HoaDon_GUI());
 //                    } else if (subMenuIndex == 1) {
-//                        main.showForm(new Return_Order_GUI());
+//                        main.showForm(new DoiTra_GUI());
 //
 //                    }
 //                } else if (menuIndex == 2) {
@@ -121,11 +120,11 @@ public class MainForm extends javax.swing.JPanel {
 //                        main.showForm(new KetCa());
 //                    }
 //                } else if (menuIndex == 3) {
-//                    main.showForm(new Customers_GUI());
+//                    main.showForm(new KhachHang_GUI());
 //
 //                } else if (menuIndex == 4) {
 //                    try {
-//                        main.showForm(new Employees_GUI());
+//                        main.showForm(new NhanVien_GUI());
 //                    } catch (SQLException ex) {
 //                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 //                    }

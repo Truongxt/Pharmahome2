@@ -4,8 +4,6 @@
  */
 package entity;
 
-
-import enums.TrangThaiDoiTra;
 import enums.TrangThaiDoiTra;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +24,6 @@ public class DoiTra {
     
     
     private Date ngayDoiTra;
-    private TrangThaiDoiTra trangThai;
     private String maHDDT;
     private NhanVien nhanvien;
     private HoaDon hoaDon;
@@ -34,11 +31,54 @@ public class DoiTra {
     private double tienTra;
     private ArrayList<ChiTietDoiTra> listDetail;
     private String liDO;
+    
+    
+    private int sldd;
+    private int sldt;
+   
+    private double ttdt;
+
+    public int getSldd() {
+        return sldd;
+    }
+
+    public void setSldd(int sldd) {
+        this.sldd = sldd;
+    }
+
+    public int getSldt() {
+        return sldt;
+    }
+
+    public void setSldt(int sldt) {
+        this.sldt = sldt;
+    }
+
+  
+
+    public double getTtdt() {
+        return ttdt;
+    }
+
+    public void setTtdt(double ttdt) {
+        this.ttdt = ttdt;
+    }
+
+    public DoiTra(int sldd, int sldt, double ttdt) {
+        this.sldd = sldd;
+        this.sldt = sldt;
+        this.ttdt = ttdt;
+    }
+    
+    
+    
 
     @Override
     public String toString() {
-        return "DoiTra{" + "ORDER_ERROR=" + ORDER_ERROR + ", EMPLOYEE_ERROR=" + EMPLOYEE_ERROR + ", REASON_EMPTY=" + REASON_EMPTY + ", TYPE_EMPTY=" + TYPE_EMPTY + ", RETURNORDERID_VALID=" + RETURNORDERID_VALID + ", ngayDoiTra=" + ngayDoiTra + ", trangThai=" + trangThai + ", maHDDT=" + maHDDT + ", nhanvien=" + nhanvien + ", hoaDon=" + hoaDon + ", loai=" + loai + ", tienTra=" + tienTra + ", listDetail=" + listDetail + ", liDO=" + liDO + '}';
+        return "DoiTra{" + "ORDER_ERROR=" + ORDER_ERROR + ", EMPLOYEE_ERROR=" + EMPLOYEE_ERROR + ", REASON_EMPTY=" + REASON_EMPTY + ", TYPE_EMPTY=" + TYPE_EMPTY + ", RETURNORDERID_VALID=" + RETURNORDERID_VALID + ", ngayDoiTra=" + ngayDoiTra + ", maHDDT=" + maHDDT + ", nhanvien=" + nhanvien + ", hoaDon=" + hoaDon + ", loai=" + loai + ", tienTra=" + tienTra + ", listDetail=" + listDetail + ", liDO=" + liDO + '}';
     }
+
+   
 
     @Override
     public int hashCode() {
@@ -62,9 +102,8 @@ public class DoiTra {
         return Objects.equals(this.maHDDT, other.maHDDT);
     }
 
-    public DoiTra(Date ngayDoiTra, TrangThaiDoiTra trangThai, String maHDDT, NhanVien nhanvien, HoaDon hoaDon, boolean loai, double tienTra, ArrayList<ChiTietDoiTra> listDetail, String liDO) {
+    public DoiTra(Date ngayDoiTra, String maHDDT, NhanVien nhanvien, HoaDon hoaDon, boolean loai, double tienTra, ArrayList<ChiTietDoiTra> listDetail, String liDO) {
         this.ngayDoiTra = ngayDoiTra;
-        this.trangThai = trangThai;
         this.maHDDT = maHDDT;
         this.nhanvien = nhanvien;
         this.hoaDon = hoaDon;
@@ -73,6 +112,8 @@ public class DoiTra {
         this.listDetail = listDetail;
         this.liDO = liDO;
     }
+
+    
 
     public DoiTra(String maHDDT) {
         this.maHDDT = maHDDT;
@@ -91,13 +132,7 @@ public class DoiTra {
         this.ngayDoiTra = ngayDoiTra;
     }
 
-    public TrangThaiDoiTra getTrangThai() {
-        return trangThai;
-    }
 
-    public void setTrangThai(TrangThaiDoiTra trangThai) {
-        this.trangThai = trangThai;
-    }
 
     public String getMaHDDT() {
         return maHDDT;
@@ -156,7 +191,7 @@ public class DoiTra {
 
     public void setLiDO(String liDO) throws Exception {
         this.liDO = liDO;
-        if(liDO.isBlank())
+        if(liDO.equalsIgnoreCase(""))
             throw new Exception(REASON_EMPTY);
         this.liDO = liDO;
     }

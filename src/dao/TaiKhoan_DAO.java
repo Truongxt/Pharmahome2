@@ -18,8 +18,8 @@ public class TaiKhoan_DAO {
             ps.setString(1, tk.getTen());
             ps.setString(2, tk.getPassword());
             ps.setBoolean(3, tk.isTrangThai());
-            ps.setString(4, tk.getVaiTro().getMaVaiTro()); 
-            ps.setString(5, tk.getNhanVien().getMaNhanVien()); 
+            ps.setString(4, tk.getVaiTro().getMaVaiTro());
+            ps.setString(5, tk.getNhanVien().getMaNhanVien());
             n = ps.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(TaiKhoan_DAO.class.getName()).log(Level.SEVERE, null, e);
@@ -58,7 +58,7 @@ public class TaiKhoan_DAO {
             if (rs.next()) {
                 String password = rs.getString("password");
                 boolean trangThai = rs.getBoolean("trangThai");
-               String mavaitro = rs.getString("maVaiTro");
+                String mavaitro = rs.getString("maVaiTro");
                 String manhanvien = rs.getString("maNhanVien");
                 // Chuyển đổi vaiTro và nhanVien nếu cần thiết
                 VaiTro vaiTro = new VaiTro(mavaitro);
@@ -77,8 +77,8 @@ public class TaiKhoan_DAO {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("UPDATE TaiKhoan SET password = ?, trangThai = ?, vaiTro = ?, nhanVien = ? WHERE ten = ?");
             ps.setString(1, tk.getPassword());
             ps.setBoolean(2, tk.isTrangThai());
-            ps.setString(3, tk.getVaiTro().toString()); 
-            ps.setString(4, tk.getNhanVien().toString()); 
+            ps.setString(3, tk.getVaiTro().toString());
+            ps.setString(4, tk.getNhanVien().toString());
             ps.setString(5, tk.getTen());
             n = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -98,6 +98,19 @@ public class TaiKhoan_DAO {
         }
         return n > 0;
     }
-    
-    
+
+    public boolean doiMatKHau(String ten, String mk) {
+        int n = 0;
+        try {
+            PreparedStatement ps = ConnectDB.conn.prepareStatement("UPDATE TaiKhoan SET password = ? WHERE tenTaiKhoan = ?");
+            ps.setString(1, mk);
+            ps.setString(2, ten);
+
+            n = ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(TaiKhoan_DAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n > 0;
+    }
+
 }

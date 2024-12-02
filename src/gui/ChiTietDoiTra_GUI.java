@@ -8,12 +8,12 @@ package gui;
  *
  * @author HÀ NHƯ
  */
-public class ReturnOrderDetail_GUI extends javax.swing.JPanel {
+public class ChiTietDoiTra_GUI extends javax.swing.JPanel {
 
     /**
      * Creates new form ReturnOrderDetail_GUI
      */
-    public ReturnOrderDetail_GUI() {
+    public ChiTietDoiTra_GUI() {
         initComponents();
     }
 

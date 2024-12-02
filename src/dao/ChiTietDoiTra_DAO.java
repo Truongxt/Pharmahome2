@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
-
 import connect.ConnectDB;
 import entity.ChiTietDoiTra;
 import entity.DoiTra;
@@ -12,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,6 +21,9 @@ import java.util.ArrayList;
  */
 public class ChiTietDoiTra_DAO implements DAOBase<ChiTietDoiTra>{
 
+   
+    
+    
     public ChiTietDoiTra getOne(String maHDDT, String maThuoc) {
         ChiTietDoiTra chiTietDoiTra = null;
         try {
@@ -73,13 +78,14 @@ public class ChiTietDoiTra_DAO implements DAOBase<ChiTietDoiTra>{
             st.setString(1, chiTietDoiTra.getDoiTra().getMaHDDT());
             st.setString(2, chiTietDoiTra.getSanPham().getMaThuoc());
             st.setInt(3, chiTietDoiTra.getSoLuong());
-            st.setDouble(4, chiTietDoiTra.getGia());
+            st.setDouble(4, chiTietDoiTra.getGia());           
             n = st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return n > 0;
     }
+   
     public Boolean updateProduct(String id, int soLuong) {
         int n = 0;
         Thuoc product = new Thuoc_DAO().getThuoc(id);
@@ -101,27 +107,35 @@ public class ChiTietDoiTra_DAO implements DAOBase<ChiTietDoiTra>{
         
         return n > 0;
     }
-    public ArrayList<ChiTietDoiTra> getAllForOrderReturnID(String id) {
-        ArrayList result = new ArrayList<>();
-        try {
-            PreparedStatement st = ConnectDB.conn.prepareStatement("SELECT * FROM ChiTietDoiTra "
-                    + "WHERE maHoaDonDoiTra = ?");
-            st.setString(1, id);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                String maThuoc = rs.getString("maThuoc");
-                int soLuong = rs.getInt("soLuong");
-                double gia = rs.getDouble("donGia");
-                Thuoc thuoc = new Thuoc_DAO().getThuoc(id);
-                DoiTra doiTra = new DoiTra(id);
-                ChiTietDoiTra returnOrderDetail = new ChiTietDoiTra(doiTra, thuoc, soLuong, gia);
-                result.add(returnOrderDetail);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    public ArrayList<ChiTietDoiTra> getAllForOrderReturnID(String returnOrderID) {
+    ArrayList<ChiTietDoiTra> result = new ArrayList<>();
+    String sql = "SELECT ctdt.maThuoc, ctdt.soLuong, ctdt.donGia, t.tenThuoc " +
+                 "FROM ChiTietDoiTra ctdt " +
+                 "JOIN Thuoc t ON ctdt.maThuoc = t.maThuoc " +
+                 "WHERE ctdt.maHoaDonDoiTra = ?";
+
+    try {
+        PreparedStatement st = ConnectDB.conn.prepareStatement(sql);
+        st.setString(1, returnOrderID); 
+        ResultSet rs = st.executeQuery();
+
+        while (rs.next()) {
+            String maThuoc = rs.getString("maThuoc");
+            String tenThuoc = rs.getString("tenThuoc");
+            int soLuong = rs.getInt("soLuong");
+            double donGia = rs.getDouble("donGia");           
+            Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, donGia);           
+            DoiTra doiTra = new DoiTra(returnOrderID);
+            ChiTietDoiTra chiTietDoiTra = new ChiTietDoiTra(doiTra, thuoc, soLuong, donGia);
+            result.add(chiTietDoiTra);
         }
-        return result;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return result;
+}
+
     
     public static void createReturnOrderDetail(DoiTra newReturnOrder, ArrayList<ChiTietDoiTra> cart) {
         for (ChiTietDoiTra chiTietDoiTra : cart) {
@@ -130,10 +144,46 @@ public class ChiTietDoiTra_DAO implements DAOBase<ChiTietDoiTra>{
                 ChiTietDoiTra_DAO.create(chiTietDoiTra);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                
             }
         }
     }
-   
-}
 
-    
+    public ArrayList<ChiTietDoiTra> getReturnedAndExchangedDrugs() {
+        ArrayList<ChiTietDoiTra> result = new ArrayList<>();
+        String query = "SELECT ctdt.maThuoc, t.tenThuoc, ctdt.soLuong, ctdt.donGia, hd.ngayDoiTra, hd.loaiDoiTra, hd.maHoaDonDoiTra, hd.moTa "
+                + "FROM ChiTietDoiTra ctdt "
+                + "JOIN Thuoc t ON ctdt.maThuoc = t.maThuoc "
+                + "JOIN HoaDonDoiTra hd ON ctdt.maHoaDonDoiTra = hd.maHoaDonDoiTra";
+
+        try {
+            // Sử dụng Connection đã được khởi tạo trong ConnectDB
+            PreparedStatement st = ConnectDB.conn.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                String maThuoc = rs.getString("maThuoc");
+                String tenThuoc = rs.getString("tenThuoc");
+                int soLuong = rs.getInt("soLuong");
+                double gia = rs.getDouble("donGia");
+                Date ngayDoiTra = rs.getDate("ngayDoiTra");
+                boolean loaiDoiTra = rs.getBoolean("loaiDoiTra");
+                String maHoaDonDoiTra = rs.getString("maHoaDonDoiTra");
+                String moTa = rs.getString("moTa");  
+
+                Thuoc sanPham = new Thuoc(maThuoc, tenThuoc, gia);
+                DoiTra doiTra = new DoiTra(maHoaDonDoiTra);
+
+                ChiTietDoiTra chiTietDoiTra = new ChiTietDoiTra(doiTra, sanPham, soLuong, gia);
+                chiTietDoiTra.getDoiTra().setNgayDoiTra(ngayDoiTra);
+                chiTietDoiTra.getDoiTra().setLoai(loaiDoiTra);
+                chiTietDoiTra.getDoiTra().setLiDO(moTa);  
+
+                result.add(chiTietDoiTra);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+}

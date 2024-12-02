@@ -58,8 +58,6 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
             double chenhLech = bangKiemTien.getChenhLech();
 
             Object[] row = new Object[]{id, nv1.getMaNhanVien(), nv2.getMaNhanVien(), formatter.format(ngayBatDau), utilities.FormatNumber.toVND(tongTien), utilities.FormatNumber.toVND(chenhLech)};
-//            Object[] row = new Object[]{id, "f", "d", createDate, utilities.FormatNumber.toVND(total), utilities.FormatNumber.toVND(difference)};
-
             model.addRow(row);
         }
     }
@@ -68,6 +66,7 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
         // Products
         model = new DefaultTableModel(new String[]{"Mã", "Người kiểm", "Đồng kiểm", "Thời điểm lập", "Tổng", "Chênh lệch"
         }, 0);
+        tbl_bangKiemTien.setModel(model);
     }
 
     /**
@@ -86,14 +85,14 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        btn_loc = new javax.swing.JButton();
+        btn_reset = new javax.swing.JButton();
+        txt_maNhanVienDongKiem = new javax.swing.JTextField();
+        txt_maNhanVien = new javax.swing.JTextField();
+        jChooseDateEnd = new com.toedter.calendar.JDateChooser();
+        jChoose_DateStart = new com.toedter.calendar.JDateChooser();
+        jcbChenhLech = new javax.swing.JComboBox<>();
+        jcbTong = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_bangKiemTien = new javax.swing.JTable();
@@ -118,31 +117,36 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
         jLabel6.setText("Chênh lệch:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 50, 80, 33));
 
-        jButton1.setBackground(new java.awt.Color(0, 153, 51));
-        jButton1.setText("Lọc");
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 50, -1, 30));
-
-        jButton2.setBackground(new java.awt.Color(102, 153, 255));
-        jButton2.setText("Reset");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 10, -1, 30));
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        btn_loc.setBackground(new java.awt.Color(0, 153, 51));
+        btn_loc.setText("Lọc");
+        btn_loc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                btn_locActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 50, 200, 30));
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 11, 200, 30));
-        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 50, 210, 30));
-        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 10, 210, 30));
+        jPanel1.add(btn_loc, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 50, -1, 30));
 
-        jComboBox2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dưới 1 triệu", "Từ 1 triệu - 2 triệu", "Từ 2 triệu - 5 triệu" }));
-        jPanel1.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 50, 210, 30));
+        btn_reset.setBackground(new java.awt.Color(102, 153, 255));
+        btn_reset.setText("Reset");
+        jPanel1.add(btn_reset, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 10, -1, 30));
 
-        jComboBox3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dưới 1 triệu", "Từ 1 triệu - 2 triệu", "Từ 2 triệu - 5 triệu" }));
-        jPanel1.add(jComboBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 210, 30));
+        txt_maNhanVienDongKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_maNhanVienDongKiemActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txt_maNhanVienDongKiem, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 50, 200, 30));
+        jPanel1.add(txt_maNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 11, 200, 30));
+        jPanel1.add(jChooseDateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 50, 210, 30));
+        jPanel1.add(jChoose_DateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 10, 210, 30));
+
+        jcbChenhLech.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jcbChenhLech.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dưới 1 triệu", "Từ 1 triệu - 2 triệu", "Từ 2 triệu - 5 triệu", "Trên 5 triệu" }));
+        jPanel1.add(jcbChenhLech, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 50, 210, 30));
+
+        jcbTong.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jcbTong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dưới 1 triệu", "Từ 1 triệu - 2 triệu", "Từ 2 triệu - 5 triệu", "Trên 5 triệu" }));
+        jPanel1.add(jcbTong, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 210, 30));
 
         tbl_bangKiemTien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -211,9 +215,9 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txt_maNhanVienDongKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_maNhanVienDongKiemActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txt_maNhanVienDongKiemActionPerformed
 
     private void tbl_bangKiemTienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_bangKiemTienMouseClicked
         // TODO add your handling code here:
@@ -236,14 +240,57 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbl_bangKiemTienMouseClicked
 
+    private void btn_locActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_locActionPerformed
+        String maNhanVien1 = txt_maNhanVien.getText();
+        String maNhanVien2 = txt_maNhanVienDongKiem.getText();
+        Date start = jChoose_DateStart.getDate();
+        Date end = jChooseDateEnd.getDate();
+        double startValueTong = 0;
+        double endValueTong = 0;
+        double startValueChenhLech = 0;
+        double endValueChenhLech = 0;
+        int typeTong = 0;
+        int typeChenhLech = 0;
+        if (jcbTong.getSelectedIndex() == 1) {
+            typeTong = 1;
+            endValueTong = 1000000;
+        } else if (jcbTong.getSelectedIndex() == 2) {
+            typeTong = 2;
+            startValueTong = 1000000;
+            endValueTong = 2000000;
+        } else if (jcbTong.getSelectedIndex() == 3) {
+            typeTong = 2;
+            startValueTong = 2000000;
+            endValueTong = 5000000;
+        } else if (jcbTong.getSelectedIndex() == 4) {
+            typeTong = 3;
+            startValueTong = 5000000;
+        }
+
+        if (jcbChenhLech.getSelectedIndex() == 1) {
+            typeChenhLech = 1;
+            endValueChenhLech = 1000000;
+        } else if (jcbChenhLech.getSelectedIndex() == 2) {
+            typeChenhLech = 2;
+            startValueChenhLech = 1000000;
+            endValueChenhLech = 2000000;
+        } else if (jcbChenhLech.getSelectedIndex() == 3) {
+            typeChenhLech = 2;
+            startValueChenhLech = 2000000;
+            endValueChenhLech = 5000000;
+        } else if (jcbChenhLech.getSelectedIndex() == 4) {
+            typeChenhLech = 3;
+            startValueChenhLech = 5000000;
+        }
+
+    }//GEN-LAST:event_btn_locActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private javax.swing.JButton btn_loc;
+    private javax.swing.JButton btn_reset;
+    private com.toedter.calendar.JDateChooser jChooseDateEnd;
+    private com.toedter.calendar.JDateChooser jChoose_DateStart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -253,8 +300,10 @@ public class DanhSachPhieuKiemTien_GUI extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox<String> jcbChenhLech;
+    private javax.swing.JComboBox<String> jcbTong;
     private javax.swing.JTable tbl_bangKiemTien;
+    private javax.swing.JTextField txt_maNhanVien;
+    private javax.swing.JTextField txt_maNhanVienDongKiem;
     // End of variables declaration//GEN-END:variables
 }

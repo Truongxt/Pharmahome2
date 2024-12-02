@@ -15,15 +15,27 @@ import entity.ThuocVaLuotBan;
 import entity.ThuocvaDoanhThu;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import message.Notification;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import raven.toast.Notifications;
 
 /**
  *
@@ -77,8 +89,6 @@ public class ThongKeThuoc extends JPanel {
         card1 = new card.Card();
         card2 = new card.Card();
 
-       
-
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tìm Kiếm\n", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         tf_Search.setText("Nhập tên thuốc");
@@ -128,6 +138,11 @@ public class ThongKeThuoc extends JPanel {
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon_Nhan/icons8-excel-4 (1).png"))); // NOI18N
         jButton4.setText("Xuất Excel");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -265,8 +280,6 @@ public class ThongKeThuoc extends JPanel {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-
-       
     }// </editor-fold>//GEN-END:initComponents
 
     private void tf_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_SearchActionPerformed
@@ -325,6 +338,19 @@ public class ThongKeThuoc extends JPanel {
         card2.setData(new ModelCard("Doanh thu "+tenThuoc+" trong tháng " +month, doanhThu, 10, null));
     }//GEN-LAST:event_tableThuocMouseClicked
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Lưu file Excel");
+    int userSelection = fileChooser.showSaveDialog(null);
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        String filePath = fileChooser.getSelectedFile().getAbsolutePath() + ".xlsx";
+        xuatFileExcel(list_Thuoc, filePath);
+        Notifications.getInstance().show(Notifications.Type.SUCCESS,  "Xuất file Excel thành công");
+            
+            
+    }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -365,9 +391,7 @@ private void setupSearch() {
     
     // Kiểm tra nếu là text placeholder hoặc rỗng
     if (query.equals("Tìm kiếm thuốc") || query.isEmpty()) {
-        Notification panel = new Notification(this, Notification.Type.WARNING, 
-        Notification.Location.TOP_CENTER, "Vui lòng nhập từ khóa tìm kiếm");
-        panel.showNotification();
+       Notifications.getInstance().show(Notifications.Type.WARNING,  "Vui lòng nhập từ khóa tìm kiếm");
         return;
     }
     
@@ -396,10 +420,7 @@ private void setupSearch() {
     if (found) {
         updateTable(list_Thuoc);
     } else {
-        Notification panel = new Notification(this, Notification.Type.WARNING,
-            Notification.Location.TOP_CENTER, "Không tìm thấy thuốc");
-        panel.showNotification();
-    }
+         Notifications.getInstance().show(Notifications.Type.WARNING,  "Không tìm thấy thuốc!!!");    }
 }
 
     public void initCard(){
@@ -432,9 +453,8 @@ private void setupSearch() {
         card1.setDataNormal(new ModelCard("Lượt bán cao nhất \n"+ thuoc.getThuoc().getTenThuoc(), thuoc.getLuotBan(), PROPERTIES, null));
         card2.setDataNormal(new ModelCard("Doanh thu cao nhất " + thuocvaDoanhThu.getThuoc().getTenThuoc(), thuocvaDoanhThu.getDoanhThu(), PROPERTIES, null));
         } catch (Exception e) {
-            Notification panel = new Notification(this, Notification.Type.WARNING, 
-            Notification.Location.TOP_CENTER, "Tháng "+ month +" chưa có dữ liệu");
-            panel.showNotification();
+             Notifications.getInstance().show(Notifications.Type.WARNING,  "Tháng "+ month +" chưa có dữ liệu");
+           
            
         }
         
@@ -502,7 +522,59 @@ private void setupSearch() {
     tableThuoc.setModel(model);
 
 }
-    
+ public static void xuatFileExcel(ArrayList<Thuoc> listThuoc, String filePath) {
+    Workbook workbook = new XSSFWorkbook();
+    Sheet sheet = workbook.createSheet("Thong Ke Thuoc");
+
+    // Tạo tiêu đề
+    Row titleRow = sheet.createRow(0);
+    Cell titleCell = titleRow.createCell(0);
+    titleCell.setCellValue("Thống kê thuốc");
+    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+    CellStyle titleStyle = workbook.createCellStyle();
+    Font titleFont = workbook.createFont();
+    titleFont.setFontHeightInPoints((short) 16);
+    titleFont.setBold(true);
+    titleStyle.setFont(titleFont);
+    titleCell.setCellStyle(titleStyle);
+
+    // Thêm dòng ngày in
+    Row dateRow = sheet.createRow(1);
+    Cell dateCell = dateRow.createCell(0);
+    dateCell.setCellValue("Ngày in: " + new java.util.Date());
+
+    // Tạo dòng tiêu đề cột
+    Row headerRow = sheet.createRow(2);
+    String[] headers = {"Mã thuốc", "Tên thuốc", "Số lượng tồn", "Hạn sử dụng", "Thuế", "Giá", "Số lượng bán", "Doanh thu"};
+    for (int i = 0; i < headers.length; i++) {
+        Cell cell = headerRow.createCell(i);
+        cell.setCellValue(headers[i]);
+    }
+
+    // Thêm dữ liệu
+    int rowNum = 3;
+    for (Thuoc thuoc : listThuoc) {
+        Row row = sheet.createRow(rowNum++);
+        row.createCell(0).setCellValue(thuoc.getMaThuoc());
+        row.createCell(1).setCellValue(thuoc.getTenThuoc());
+        row.createCell(2).setCellValue(thuoc.getSoLuongTon());
+        row.createCell(3).setCellValue(thuoc.getHsd().toString());
+        row.createCell(4).setCellValue(thuoc.getThue());
+        row.createCell(5).setCellValue(thuoc.getGia());
+        row.createCell(6).setCellValue(cthd.getsoLuongBan(thuoc.getMaThuoc()));
+        row.createCell(7).setCellValue(cthd.getDoanhThu(thuoc.getMaThuoc()));
+    }
+
+    // Ghi file
+    try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+        workbook.write(outputStream);
+        workbook.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+   
 public static void main(String[] args) throws SQLException {
     JFrame frame = new JFrame("Thong Ke Thuoc");
    

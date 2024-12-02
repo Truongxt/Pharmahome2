@@ -70,7 +70,7 @@ public class BangKiemTien_DAO {
 
                 Date ngayBatDau = new Date(diemBatDau.getTime());
                 Date ngayKetThuc = new Date(diemKetThuc.getTime());
-                BangKiemTien bangKiemTien = new BangKiemTien(maBangKiemTien, new KiemTien_DAO().getAll(maBangKiemTien), new ChiTietBangKiemTien_DAO().getAllCashCountSheetDetailInCashCountSheet(maBangKiemTien),ngayBatDau, ngayKetThuc);
+                BangKiemTien bangKiemTien = new BangKiemTien(maBangKiemTien, new KiemTien_DAO().getAll(maBangKiemTien), new ChiTietBangKiemTien_DAO().getAllCashCountSheetDetailInCashCountSheet(maBangKiemTien), ngayBatDau, ngayKetThuc);
 
                 bangKiemTiens.add(bangKiemTien);
             }
@@ -165,5 +165,31 @@ public class BangKiemTien_DAO {
         create(bangKiemTien);
 //        GeneratePDF(bangKiemTien);
 
+    }
+
+    public ArrayList<BangKiemTien> filter() {
+        ArrayList<BangKiemTien> list = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM BangKiemTien";
+            PreparedStatement preparedStatement = ConnectDB.conn.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String maBangKiemTien = resultSet.getString("maBangKiemTien");
+                Timestamp diemBatDau = resultSet.getTimestamp("ngayBatDau");
+                Timestamp diemKetThuc = resultSet.getTimestamp("ngayKetThuc");
+
+                Date ngayBatDau = new Date(diemBatDau.getTime());
+                Date ngayKetThuc = new Date(diemKetThuc.getTime());
+                BangKiemTien bangKiemTien = new BangKiemTien(maBangKiemTien, new KiemTien_DAO().getAll(maBangKiemTien), new ChiTietBangKiemTien_DAO().getAllCashCountSheetDetailInCashCountSheet(maBangKiemTien), ngayBatDau, ngayKetThuc);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
