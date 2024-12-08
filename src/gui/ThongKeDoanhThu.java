@@ -88,9 +88,8 @@ public class ThongKeDoanhThu extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lọc: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
         jPanel1.setEnabled(false);
 
-        btnExcel.setBackground(new java.awt.Color(0, 204, 51));
         btnExcel.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        btnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon_Nhan/icons8-excel-48.png"))); // NOI18N
+        btnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/logo.png"))); // NOI18N
         btnExcel.setText("Xuất Excel");
         btnExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

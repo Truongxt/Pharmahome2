@@ -76,17 +76,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
     private  double refund = 0;
 
     public DoiTra_GUI(TaiKhoan tk) {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
         initComponents();
-        try {
-            connect.ConnectDB.connect();
-        } catch (SQLException ex) {
-            Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
         this.tk = tk;
         cart = new ArrayList<>();
         hd_DAO = new HoaDon_DAO();
@@ -167,7 +157,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             }
         });
 
-        btn_searchReturnOrder.setBackground(new java.awt.Color(102, 153, 255));
+        btn_searchReturnOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/circle.png"))); // NOI18N
         btn_searchReturnOrder.setText("Tìm kiếm");
         btn_searchReturnOrder.setMaximumSize(new java.awt.Dimension(79, 43));
         btn_searchReturnOrder.setPreferredSize(new java.awt.Dimension(90, 50));
@@ -177,8 +167,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             }
         });
 
-        btn_barcode.setBackground(new java.awt.Color(0, 153, 51));
-        btn_barcode.setForeground(new java.awt.Color(255, 255, 255));
+        btn_barcode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/barcode.png"))); // NOI18N
         btn_barcode.setText("Barcode");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -186,23 +175,22 @@ public class DoiTra_GUI extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addContainerGap()
                 .addComponent(txt_MaHD, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btn_searchReturnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(btn_barcode, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addComponent(btn_searchReturnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_barcode, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_barcode, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txt_MaHD, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_searchReturnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_MaHD, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_searchReturnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btn_barcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin hóa đơn", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
@@ -280,19 +268,17 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 btn_XoaTrangActionPerformed(evt);
             }
         });
-        jPanel3.add(btn_XoaTrang, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 500, -1, 40));
+        jPanel3.add(btn_XoaTrang, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 480, -1, 40));
 
-        btn_Them.setBackground(new java.awt.Color(0, 153, 102));
         btn_Them.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        btn_Them.setText("Thêm sp");
+        btn_Them.setText("Thêm sản phẩm");
         btn_Them.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_ThemActionPerformed(evt);
             }
         });
-        jPanel3.add(btn_Them, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 500, -1, 40));
+        jPanel3.add(btn_Them, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, -1, 40));
 
-        btn_TaoHDDT.setBackground(new java.awt.Color(102, 153, 255));
         btn_TaoHDDT.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btn_TaoHDDT.setText("Tạo đơn đổi trả");
         btn_TaoHDDT.addActionListener(new java.awt.event.ActionListener() {
@@ -300,7 +286,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 btn_TaoHDDTActionPerformed(evt);
             }
         });
-        jPanel3.add(btn_TaoHDDT, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 500, -1, 40));
+        jPanel3.add(btn_TaoHDDT, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, -1, 40));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel12.setText("Sản phẩm:");
@@ -422,7 +408,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_TenNV, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtTenNV, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -431,7 +417,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -450,14 +436,13 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void init() {
         hoaDon = hd_DAO.getHoaDon(txt_MaHD.getText());
-        System.out.println(txt_MaHD.getText());
         //set txt ma hoa don
         txtMaHD.setText(hoaDon.getMaHD());
         cart = hd_DAO.getChiTietHoaDon(txt_MaHD.getText());

@@ -31,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import message.Notification;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
@@ -71,6 +72,7 @@ public class NhanVien_GUI extends javax.swing.JPanel {
         tableNV.setModel(tableModel);
         buttonGroup1.add(rdb_dangLamViec);
         buttonGroup1.add(rdb_nghiViec);
+        jtf_maNhanVien.setText(nv_Dao.generateID());
         initTable();
         initJcb();
     }
@@ -141,7 +143,7 @@ public class NhanVien_GUI extends javax.swing.JPanel {
                 jtf_timTheoMaKeyTyped(evt);
             }
         });
-        jPanel1.add(jtf_timTheoMa, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 28, 235, 44));
+        jPanel1.add(jtf_timTheoMa, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 28, 235, 40));
         jtf_timTheoMa.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,"Nhập mã nhân viên");
 
         jtf_timTheoTen.addActionListener(new java.awt.event.ActionListener() {
@@ -293,7 +295,6 @@ public class NhanVien_GUI extends javax.swing.JPanel {
             }
         });
 
-        btn_them.setBackground(new java.awt.Color(51, 255, 0));
         btn_them.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/plus.png"))); // NOI18N
         btn_them.setText("Thêm");
         btn_them.addActionListener(new java.awt.event.ActionListener() {
@@ -497,6 +498,10 @@ public class NhanVien_GUI extends javax.swing.JPanel {
 
     private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
         int index = tableNV.getSelectedRow();
+        if(index == -1){
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Bạn cần phải chọn dòng để chỉnh sửa!");
+            return;
+        }
         String maNhanVien = tableNV.getValueAt(index, 0) + "";
         NhanVien nv = nv_Dao.getNhanVien(maNhanVien);
         String tenNhanVien = jtf_tenNhanVien.getText();
@@ -554,7 +559,7 @@ public class NhanVien_GUI extends javax.swing.JPanel {
     }
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
         if (checkData()) {
-            String maNV = xuLyMaNV();
+            String maNV = jtf_maNhanVien.getText();
             String tenNhanVien = jtf_tenNhanVien.getText();
             String email = jtf_emil.getText();
             String diaChi = jtf_diaChi.getText();
@@ -662,25 +667,25 @@ public class NhanVien_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcb_trangThaiItemStateChanged
 
-    public String xuLyMaNV() {
-        //luu nhan vien tam
-        ArrayList<NhanVien> listTmp = nv_Dao.getAllNhanVien();
-        // luu ma so da qua xu ly
-        TreeSet<Integer> listMaNV = new TreeSet();
-        for (NhanVien nv : listTmp) {
-            listMaNV.add(Integer.valueOf((nv.getMaNhanVien()).substring(8)));
-        }
-        int size = listMaNV.getLast() + 1;
-        System.out.println(size);
-        LocalDate ngayVaoLam = LocalDate.now();
-        String maNV = "NV" + ngayVaoLam.getDayOfMonth() + "" + ngayVaoLam.getMonthValue() + "" + (ngayVaoLam.getYear() + "").substring(2);
-        maNV += String.format("%03d", size);
-        return maNV;
-    }
+//    public String xuLyMaNV() {
+//        //luu nhan vien tam
+//        ArrayList<NhanVien> listTmp = nv_Dao.getAllNhanVien();
+//        // luu ma so da qua xu ly
+//        TreeSet<Integer> listMaNV = new TreeSet();
+//        for (NhanVien nv : listTmp) {
+//            listMaNV.add(Integer.valueOf((nv.getMaNhanVien()).substring(8)));
+//        }
+//        int size = listMaNV.getLast() + 1;
+//        System.out.println(size);
+//        LocalDate ngayVaoLam = LocalDate.now();
+//        String maNV = "NV" + ngayVaoLam.getDayOfMonth() + "" + ngayVaoLam.getMonthValue() + "" + (ngayVaoLam.getYear() + "").substring(2);
+//        maNV += String.format("%03d", size);
+//        return maNV;
+//    }
 
     //check regex
     public boolean checkData() {
-        String maNV = xuLyMaNV();
+        String maNV = jtf_maNhanVien.getText();
         String tenNhanVien = jtf_tenNhanVien.getText();
         String email = jtf_emil.getText();
         String diaChi = jtf_diaChi.getText();
@@ -716,7 +721,7 @@ public class NhanVien_GUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Không được để trống trạng thái của nhân viên", "Cảnh báo", JOptionPane.ERROR_MESSAGE);
             return false;
 
-        } else if (!ConvertDate.convert(jDate_ngayVaoLam.getDate()).isBefore(LocalDate.now())) {
+        } else if (!ConvertDate.convert(jDate_ngayVaoLam.getDate()).isBefore(LocalDate.now()) && !ConvertDate.convert(jDate_ngayVaoLam.getDate()).isEqual(LocalDate.now())) {
             JOptionPane.showMessageDialog(this, "Ngày vào làm phải trước ngày hiện tại", "Cảnh báo", JOptionPane.ERROR_MESSAGE);
             return false;
 

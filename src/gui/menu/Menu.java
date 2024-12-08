@@ -98,9 +98,11 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/business.png")), "Bán hàng"));
+
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/drugs.png")), "Thuốc"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn", "Tạo hóa đơn", "Đổi trả", "Lịch sử hóa đơn"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/computer.png")), "Thống kê", "Thuốc", "Khách hàng", "Doanh thu"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn","Tạo hóa đơn đổi trả", "Lịch sử hóa đơn", "Lịch sử hóa đơn đổi trả"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/analysis.png")), "Thống kê", "Thuốc", "Khách hàng", "Doanh thu"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/computer.png")), "Báo cáo", "Phiếu kiểm tiền", "Kết toán", "Danh sách phiếu kiểm tiền", "Danh sách kết toán"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/end.png")), "Khách hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/employee.png")), "Nhân viên"));
@@ -214,9 +216,9 @@ public class Menu extends javax.swing.JPanel {
         }
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, Color.decode("#95C9F4"), getWidth(), 0, Color.decode("#C6D4DF"));
+        GradientPaint gp = new GradientPaint(0, 0, Color.decode("#11998e"), getWidth(), 0, Color.decode("#38ef7d"));
         g2.setPaint(gp);
-        
+
         g2.fillRect(0, 0, getWidth(), getHeight());
         super.paintComponent(g);
     }

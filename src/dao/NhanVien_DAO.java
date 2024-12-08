@@ -16,7 +16,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
-
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -186,7 +186,8 @@ public class NhanVien_DAO {
         }
         return listNV;
     }
-    public NhanVien timKiemTheoMa1 (String maNhanVien) {
+
+    public NhanVien timKiemTheoMa1(String maNhanVien) {
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("select * from NhanVien where maNhanVien like ?");
             ps.setString(1, "%" + maNhanVien + "%");
@@ -266,7 +267,7 @@ public class NhanVien_DAO {
         ArrayList<NhanVien> listNV = new ArrayList<>();
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("select * from NhanVien where sdt like ?");
-            ps.setString(1, "%"+soDT+"%");
+            ps.setString(1, "%" + soDT + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String maNV = rs.getString("maNhanVien");
@@ -285,5 +286,35 @@ public class NhanVien_DAO {
             Logger.getLogger(NhanVien_DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return listNV;
+    }
+
+    public String generateID() {
+        String result = "NV";
+        LocalDate time = LocalDate.now();
+        String query = """
+                       select top 1 * from [HoaDon]
+                       where maHD like ?
+                       order by maHD desc
+                       """;
+
+        try {
+            PreparedStatement st = ConnectDB.conn.prepareStatement(query);
+            st.setString(1, result + "%");
+            ResultSet rs = st.executeQuery();
+            LocalDate ngayVaoLam = LocalDate.now();
+            String date = String.format("%02d",ngayVaoLam.getDayOfMonth()) + "" + ngayVaoLam.getMonthValue() + "" + (ngayVaoLam.getYear() + "").substring(2);
+            if (rs.next()) {
+                String lastID = rs.getString("maHD");
+                String sNumber = lastID.substring(lastID.length() - 2);
+                int num = Integer.parseInt(sNumber) + 1;
+                result += date + lastID.substring(2) + String.format("%03d", num);
+            } else {
+                result += date + String.format("%05d", 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

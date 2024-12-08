@@ -118,7 +118,7 @@ public class KhachHang_DAO {
         return khachHang;
     }
 
-    public String TaoID(java.util.Date date, boolean gender) {
+    public String TaoID() {
         //Khởi tạo mã Khách hàng KH
         String prefix = "KH";
         //4 Kí tự kế tiếp là năm sinh khách hàng
@@ -151,14 +151,7 @@ public class KhachHang_DAO {
 
     public static Boolean taoMoi(KhachHang kh) {
         try {
-            String phoneCheck = "select * from Customer where phoneNumber = ?";
-            PreparedStatement phoneStatement = ConnectDB.conn.prepareStatement(phoneCheck);
-            phoneStatement.setString(1, kh.getSdt());
-            if (phoneStatement.executeQuery().next()) {
-                return false;
-            }
-
-            String sql = "INSERT INTO Customer (maKhachHang, tenKhachHang, sdt, diemTichLuy) " + "VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO KhachHang (maKhachHang, tenKhachHang, sdt, diemTichLuy) " + "VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = ConnectDB.conn.prepareStatement(sql);
 
             preparedStatement.setString(1, kh.getMaKH());

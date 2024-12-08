@@ -13,12 +13,14 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import connect.ConnectDB;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
 import dao.VaiTro_DAO;
 import entity.NhanVien;
 import entity.TaiKhoan;
 import entity.VaiTro;
+import gui.DanhSachHoaDonDoiTra_GUI;
 import gui.KhachHang_GUI;
 import gui.DanhSachPhieuKetToan_GUI;
 import gui.DanhSachPhieuKiemTien_GUI;
@@ -53,14 +55,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollBar;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -184,6 +189,7 @@ public class Main extends javax.swing.JFrame {
             public void onLoginSuccess(TaiKhoan tk) {
                 // Đăng nhập thành công, hiển thị menu và main
                 Main.this.tk = tk;
+                nhanVien = tk.getNhanVien();
                 init();
                 setContentPane(bg);
                 SwingUtilities.updateComponentTreeUI(Main.this);
@@ -207,27 +213,31 @@ public class Main extends javax.swing.JFrame {
         header = new Header(nhanVien.getTenNhanVien(), vaiTro.getTen(), this);
         main = new MainForm();
         main.showForm(new HoaDon_GUI(tk));
-
         menu.addEvent(new EventMenuSelected() {
             @Override
             public void menuSelected(int menuIndex, int subMenuIndex) {
-
                 if (menuIndex == 0) {
+                    main.showForm(new HoaDon_GUI(tk));
+                } else if (menuIndex == 1) {
                     try {
-                        main.showForm(new Thuoc_GUI());
+                        if (tk.getVaiTro().getMaVaiTro().equalsIgnoreCase("NVQL1203")) {
+                            main.showForm(new Thuoc_GUI());
+                        } else {
+                            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Bạn không có quyền truy cập vào mục này!");
+                        }
                     } catch (UnsupportedLookAndFeelException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (menuIndex == 1) {
+                } else if (menuIndex == 2) {
                     if (subMenuIndex == 0) {
-                        main.showForm(new HoaDon_GUI(tk));
-                    } else if (subMenuIndex == 1) {
                         main.showForm(new DoiTra_GUI(tk));
 
-                    } else if (subMenuIndex == 2) {
+                    } else if (subMenuIndex == 1) {
                         main.showForm(new LichSuHoaDon_GUI());
+                    } else if (subMenuIndex == 2) {
+                        main.showForm(new DanhSachHoaDonDoiTra_GUI());
                     }
-                } else if (menuIndex == 2) {
+                } else if (menuIndex == 3) {
                     if (subMenuIndex == 0) {
                         try {
                             main.showForm(new ThongKeThuoc());
@@ -245,7 +255,7 @@ public class Main extends javax.swing.JFrame {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                } else if (menuIndex == 3) {
+                } else if (menuIndex == 4) {
                     if (subMenuIndex == 0) {
                         main.showForm(new KiemTien_GUI(tk));
                     } else if (subMenuIndex == 1) {
@@ -256,17 +266,28 @@ public class Main extends javax.swing.JFrame {
                         main.showForm(new DanhSachPhieuKetToan_GUI());
                     }
 
-                } else if (menuIndex == 4) {
+                } else if (menuIndex == 5) {
+
                     main.showForm(new KhachHang_GUI());
 
-                } else if (menuIndex == 5) {
+                } else if (menuIndex == 6) {
                     try {
-                        main.showForm(new NhanVien_GUI());
+                        if (tk.getVaiTro().getMaVaiTro().equalsIgnoreCase("NVQL1203")) {
+                            main.showForm(new NhanVien_GUI());
+                        } else {
+                            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Bạn không có quyền truy cập vào mục này!");
+
+                        }
                     } catch (SQLException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (menuIndex == 6) {
-                    main.showForm(new NhaCungCap_GUI());
+                } else if (menuIndex == 7) {
+                    if (tk.getVaiTro().getMaVaiTro().equalsIgnoreCase("NVQL1203")) {
+                        main.showForm(new NhaCungCap_GUI());
+                    } else {
+                        Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Bạn không có quyền truy cập vào mục này!");
+
+                    }
                 }
             }
         });
@@ -323,6 +344,20 @@ public class Main extends javax.swing.JFrame {
                     //ẩn menu sau khi thu gọn
                     menu.hideAllMenu();
                 }
+            }
+        });
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(null,
+                        "Bạn muốn thoát khỏi ứng dụng Pharmahome?", "Đóng ứng dụng?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    ConnectDB.disconnect();
+                    System.exit(0);
+                }
+
             }
         });
     }

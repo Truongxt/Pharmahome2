@@ -57,6 +57,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         tbl_nhaCungCap.setModel(model);
         listNCC = new NhaCungCap_DAO().getAllNhaCungCap();
         jtf_manhacungcap.setText(xuLyMa());
+        buttonGroup1.add(rd_dangLamViec);
+        buttonGroup1.add(rd_nghiViec);
         taiThongTinLenBang(listNCC);
         alterTable();
     }
@@ -64,7 +66,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
     public final void taiThongTinLenBang(ArrayList<NhaCungCap> list) {
         model.setRowCount(0);
         for (NhaCungCap nhaCungCap : list) {
-            Object[] row = new Object[]{nhaCungCap.getMaNCC(), nhaCungCap.getTenNCC(), nhaCungCap.getSdt(), nhaCungCap.getDiaChi(), nhaCungCap.getEmail(), nhaCungCap.isTrangThai() ? "Dang hoat dong" : "khong hoat dong"};
+            Object[] row = initObject(nhaCungCap);
             model.addRow(row);
         }
     }
@@ -80,6 +82,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jtf_timSoDienThoai = new javax.swing.JTextField();
@@ -114,8 +117,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
 
         jButton2.setText("Lọc");
 
-        btn_loc.setBackground(new java.awt.Color(102, 153, 255));
         btn_loc.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btn_loc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/funnel.png"))); // NOI18N
         btn_loc.setText("Lọc");
         btn_loc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,7 +153,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
                             .addComponent(jtf_timSoDienThoai, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_loc, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách nhà cung cấp", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
@@ -190,7 +193,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -233,8 +236,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         });
 
         btn_lamMoi.setFont(btn_lamMoi.getFont().deriveFont((float)14));
+        btn_lamMoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/remove.png"))); // NOI18N
         btn_lamMoi.setText("Xóa trắng");
-        btn_lamMoi.setIcon(SVGIcon.getSVGIcon("imgs/public/clear.svg"));
         btn_lamMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_lamMoiActionPerformed(evt);
@@ -242,8 +245,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         });
 
         btn_capNhat.setFont(btn_capNhat.getFont().deriveFont((float)14));
+        btn_capNhat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/setting.png"))); // NOI18N
         btn_capNhat.setText("Cập nhật");
-        btn_capNhat.setIcon(SVGIcon.getSVGIcon("imgs/public/update.svg"));
         btn_capNhat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_capNhatActionPerformed(evt);
@@ -251,8 +254,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         });
 
         btn_xuatFile.setFont(btn_xuatFile.getFont().deriveFont((float)14));
+        btn_xuatFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/logo.png"))); // NOI18N
         btn_xuatFile.setText("Xuất file");
-        btn_xuatFile.setIcon(SVGIcon.getSVGIcon("imgs/public/excel.svg"));
         btn_xuatFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_xuatFileActionPerformed(evt);
@@ -260,9 +263,9 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         });
 
         btn_themMoi.setFont(btn_themMoi.getFont().deriveFont((float)14));
+        btn_themMoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/plus.png"))); // NOI18N
         btn_themMoi.setText("Thêm mới");
-        btn_themMoi.putClientProperty(FlatClientProperties.STYLE, "background: $Menu.background;"+"foreground: $Menu.foreground");
-        btn_themMoi.setIcon(SVGIcon.getPrimarySVGIcon("imgs/public/add.svg"));
+        btn_themMoi.setOpaque(true);
         btn_themMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_themMoiActionPerformed(evt);
@@ -278,16 +281,6 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_themMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_lamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_capNhat, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_xuatFile, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -317,7 +310,16 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtf_manhacungcap, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jtf_manhacungcap, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btn_themMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_lamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_capNhat, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_xuatFile, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -348,7 +350,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rd_dangLamViec)
                     .addComponent(rd_nghiViec))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(71, 71, 71)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_capNhat, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_lamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -356,7 +358,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_xuatFile, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_themMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -365,8 +367,8 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 444, Short.MAX_VALUE))
                 .addContainerGap())
@@ -378,7 +380,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -403,14 +405,14 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         Object[] obj = new Object[6];
         obj[0] = ncc.getMaNCC();
         obj[1] = ncc.getTenNCC();
-        obj[2] = ncc.getDiaChi();
-        obj[3] = ncc.getEmail();
-        obj[4] = ncc.getSdt();
+        obj[2] = ncc.getSdt();
+        obj[3] = ncc.getDiaChi();
+        obj[4] = ncc.getEmail();
         if (ncc.isTrangThai()) {
-            obj[5] = "Dang hoat dong";
+            obj[5] = "Đang hoạt động";
 
         } else {
-            obj[5] = "khong hoat dong";
+            obj[5] = "không hoạt động";
         }
         return obj;
     }
@@ -443,27 +445,20 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         if (rd_nghiViec.isSelected()) {
             trangThai = false;
         }
+        if (maNCC.isEmpty() || tenNCC.isEmpty() || soDT.isEmpty() || diaChi.isEmpty() || email.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
         NhaCungCap newNCC = new NhaCungCap(maNCC, tenNCC, diaChi, email, soDT, trangThai);
         try {
             if (NhaCungCap_DAO.suaNhaCungCap(maNCC, newNCC)) {
-                JOptionPane.showConfirmDialog(this, "Sửa thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
-                Object obj[] = new Object[6];
-                obj[0] = newNCC.getMaNCC();
-                obj[1] = newNCC.getTenNCC();
-                obj[2] = newNCC.getDiaChi();
-                obj[3] = newNCC.getEmail();
-                obj[4] = newNCC.getSdt();
-                if (ncc.isTrangThai()) {
-                    obj[5] = "Dang hoat dong";
-
-                } else {
-                    obj[5] = "khong hoat dong";
-                }
+                Object obj[] = initObject(newNCC);
                 model.insertRow(index, obj);
                 model.removeRow(index + 1);
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "Sửa thành công");
 
             } else {
-                JOptionPane.showConfirmDialog(this, "Sửa thất bại", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Sửa thất bại");
 
             }
         } catch (SQLException ex) {
@@ -499,7 +494,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
     private void btn_themMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themMoiActionPerformed
 
         String maNCC = xuLyMa();
-        String tenNhanVien = jtf_tenNhaCungCap.getText();
+        String tenNCC = jtf_tenNhaCungCap.getText();
         String soDienThoai = jtf_soDienThoai.getText();
         String diaChi = jtf_diaChi.getText();
         String email = jtf_email.getText();
@@ -507,19 +502,12 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         if (rd_nghiViec.isSelected()) {
             trangThai = false;
         }
-        NhaCungCap ncc = new NhaCungCap(maNCC, tenNhanVien, soDienThoai, diaChi, email, trangThai);
-        Object obj[] = new Object[6];
-        obj[0] = ncc.getMaNCC();
-        obj[1] = ncc.getTenNCC();
-        obj[2] = ncc.getSdt();
-        obj[3] = ncc.getDiaChi();
-        obj[4] = ncc.getEmail();
-        if (ncc.isTrangThai()) {
-            obj[5] = "Dang hoat dong";
-
-        } else {
-            obj[5] = "khong hoat dong";
+        if (maNCC.isEmpty() || tenNCC.isEmpty() || soDienThoai.isEmpty() || diaChi.isEmpty() || email.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập đầy đủ thông tin");
+            return;
         }
+        NhaCungCap ncc = new NhaCungCap(maNCC, tenNCC, soDienThoai, diaChi, email, trangThai);
+        Object obj[] = initObject(ncc);
         if (NhaCungCap_DAO.create(ncc)) {
             JOptionPane.showConfirmDialog(this, "Thêm thành công", "Xác nhân", JOptionPane.DEFAULT_OPTION);
             model.addRow(obj);
@@ -678,6 +666,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
     private javax.swing.JButton btn_loc;
     private javax.swing.JButton btn_themMoi;
     private javax.swing.JButton btn_xuatFile;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
