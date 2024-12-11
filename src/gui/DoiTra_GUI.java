@@ -1,4 +1,3 @@
-
 package gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
@@ -43,6 +42,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import main.Main;
 import raven.toast.Notifications;
 import utilities.FormatNumber;
 import utilities.ReturnOrderPrinter;
@@ -51,7 +51,6 @@ import utilities.ReturnOrderPrinter;
  *
  * @author HÀ NHƯ
  */
-
 public class DoiTra_GUI extends javax.swing.JPanel {
 
     private ArrayList<ChiTietHoaDon> cart;
@@ -66,14 +65,14 @@ public class DoiTra_GUI extends javax.swing.JPanel {
     private NhanVien nv;
     ArrayList<ChiTietHoaDon> listSPHoan;
     ArrayList<ChiTietDoiTra> listDoiTra;
-    private DoiTra doiTra;  
+    private DoiTra doiTra;
     private int maxQuantity;
     private double totalRefund;
     private boolean isUpdating = false;
     private JPopupMenu popup = new JPopupMenu();
-    private boolean isSelectingFromPopup = false; 
+    private boolean isSelectingFromPopup = false;
     private HoaDon hd;
-    private  double refund = 0;
+    private double refund = 0;
 
     public DoiTra_GUI(TaiKhoan tk) {
         initComponents();
@@ -462,7 +461,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 return column == 2;
             }
         };
-         // Thêm listener vào TableModel của JTable
+        // Thêm listener vào TableModel của JTable
         tblModel_SP.addTableModelListener(new javax.swing.event.TableModelListener() {
             @Override
             public void tableChanged(javax.swing.event.TableModelEvent e) {
@@ -475,7 +474,6 @@ public class DoiTra_GUI extends javax.swing.JPanel {
 
     private void renderCartTable() {
 
-       
         tblModel_SP.setRowCount(0);
         for (ChiTietHoaDon item : cart) {
             Object[] newRow = new Object[]{item.getThuoc().getMaThuoc(), item.getThuoc().getTenThuoc(), item.getSoLuong()};
@@ -509,7 +507,6 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 int soLuongCu = Integer.parseInt(table_HD.getValueAt(row, 3) + "");
                 ChiTietHoaDon current = cart.get(row);
 
-
                 if (soLuongMoi < 0) {
                     Notifications.getInstance().show(Notifications.Type.WARNING, "Số lượng không được bé hơn 0");
                     table_SanPham.setValueAt(current.getSoLuong(), row, col);
@@ -531,7 +528,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                     Notifications.getInstance().show(Notifications.Type.WARNING, "Số lượng đổi không hợp lệ");
                     table_SanPham.setValueAt(current.getSoLuong(), row, col);
                     return;
-                } 
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Notifications.getInstance().show(Notifications.Type.INFO, "Số lượng không hợp lệ");
@@ -540,15 +537,12 @@ public class DoiTra_GUI extends javax.swing.JPanel {
                 Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể cập nhật số lượng mới!");
             }
         });
-        
-        
+
     }
 
-
-   
     private void renderOrderDetail(String maHD) {
         try {
-             List<ChiTietHoaDon> chiTietHoaDonList = hd_DAO.getChiTietHoaDon(maHD);
+            List<ChiTietHoaDon> chiTietHoaDonList = hd_DAO.getChiTietHoaDon(maHD);
 
             if (chiTietHoaDonList == null || chiTietHoaDonList.isEmpty()) {
                 Notifications.getInstance().show(Notifications.Type.INFO, "Không có sản phẩm nào trong hóa đơn này.");
@@ -559,10 +553,10 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             for (ChiTietHoaDon chiTiet : chiTietHoaDonList) {
                 Object[] rowData = new Object[]{
                     chiTiet.getHoaDon().getMaHD(),
-                    chiTiet.getThuoc().getMaThuoc(), 
-                    chiTiet.getThuoc().getTenThuoc(), 
-                    chiTiet.getSoLuong(), 
-                    FormatNumber.toVND(chiTiet.getDonGia()), 
+                    chiTiet.getThuoc().getMaThuoc(),
+                    chiTiet.getThuoc().getTenThuoc(),
+                    chiTiet.getSoLuong(),
+                    FormatNumber.toVND(chiTiet.getDonGia()),
                     FormatNumber.toVND(chiTiet.thanhTien())
                 };
                 tblModel_HD.addRow(rowData);
@@ -573,15 +567,17 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             ex.printStackTrace();
         }
     }
+
     public Object[] initObjectSP(Thuoc t, int soLuong, int stt) {
         Object[] obj = new Object[5];
         obj[0] = stt;
         obj[1] = t.getTenThuoc();
         obj[2] = soLuong;
         obj[3] = t.getGia();
-       obj[4] = new ChiTietHoaDon(soLuong, t.getGia(), t, hd).thanhTien();
+        obj[4] = new ChiTietHoaDon(soLuong, t.getGia(), t, hd).thanhTien();
         return obj;
     }
+
     public Object[] initObject(ChiTietHoaDon item) {
         Object[] obj = new Object[6];
         obj[0] = hoaDon.getMaHD();
@@ -596,7 +592,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
 
 
     private void btn_searchReturnOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_searchReturnOrderActionPerformed
-        String maHoaDon = txt_MaHD.getText().trim();  
+        String maHoaDon = txt_MaHD.getText().trim();
         if (maHoaDon.isEmpty()) {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Mã hóa đơn không được để trống!");
             return;
@@ -604,7 +600,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
         DoiTra_DAO dt_dao = new DoiTra_DAO();
         if (dt_dao.isReturnOrderExist(maHoaDon)) {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Hóa đơn này đã thực hiện đổi trả, không thể tìm kiếm!");
-            return;  
+            return;
         }
 
         init();
@@ -627,20 +623,29 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Chưa chọn sản phẩm để đổi trả");
             return;
         }
-          String reason = txt_MoTa.getText().trim();
+        String reason = txt_MoTa.getText().trim();
         if (reason.isEmpty()) {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Lý do đổi trả không được để trống.");
             return;
         }
-            DoiTra newReturnOrder = null;
+        DoiTra newReturnOrder = null;
         try {
-            newReturnOrder = getNewValues(); 
+            newReturnOrder = getNewValues();
         } catch (Exception ex) {
             Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-            createNewReturnOrder(newReturnOrder);   
-            Print(newReturnOrder);                 
-            renderReturnOrderInfor();             
+        try {
+            createNewReturnOrder(newReturnOrder);
+        } catch (SQLException ex) {
+            Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Print(newReturnOrder);
+        renderReturnOrderInfor();
+        try {
+            refesh();
+        } catch (SQLException ex) {
+            Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_TaoHDDTActionPerformed
     private void Print(DoiTra returnOrder) {
         ReturnOrderPrinter printer = new ReturnOrderPrinter(returnOrder);
@@ -680,9 +685,8 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             }
         }
 
-       
         String reason = txt_MoTa.getText().trim();
-        double tienhoan = 0; 
+        double tienhoan = 0;
 
         for (int i = 0; i < tblModel_SP.getRowCount(); i++) {
             String maThuoc = tblModel_SP.getValueAt(i, 0).toString();
@@ -691,7 +695,7 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             double dongia = Double.parseDouble(tblModel_HD.getValueAt(i, 4).toString());
 
             tienhoan = dongia * soLuong;
-            if (isReturn) { 
+            if (isReturn) {
                 refund += tienhoan;
             }
 
@@ -702,7 +706,6 @@ public class DoiTra_GUI extends javax.swing.JPanel {
         DoiTra newReturnOrder = new DoiTra(returnDate, returnOrderID, nv, hoaDon, isReturn, refund, (ArrayList<ChiTietDoiTra>) listDoiTra, reason);
         return newReturnOrder;
     }
-
 
 
     private void rdn_TraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdn_TraActionPerformed
@@ -718,9 +721,9 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Hãy chọn một sản phẩm trong bảng hóa đơn!");
             return;
         }
-        LocalDate ngayLapHoaDon = hoaDon.getNgayLap(); 
-        LocalDate ngayHienTai = LocalDate.now(); 
-        LocalDate ngayDoiTra = ngayHienTai.minusDays(7); 
+        LocalDate ngayLapHoaDon = hoaDon.getNgayLap();
+        LocalDate ngayHienTai = LocalDate.now();
+        LocalDate ngayDoiTra = ngayHienTai.minusDays(7);
 
         if (ngayLapHoaDon.isBefore(ngayDoiTra)) {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể thực hiện đổi trả vì ngày lập hóa đơn trước 7 ngày.");
@@ -740,10 +743,10 @@ public class DoiTra_GUI extends javax.swing.JPanel {
 
         if (isProductExist) {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Sản phẩm đã tồn tại trong danh sách đổi trả!");
-            
+
             return;
         }
-        
+
         tblModel_SP.addRow(new Object[]{maThuoc, tenThuoc, soLuong});
 
         if (listSPHoan == null) {
@@ -763,12 +766,12 @@ public class DoiTra_GUI extends javax.swing.JPanel {
 
     private void txt_MaHDKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MaHDKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        String maHD = txt_MaHD.getText().trim(); 
-        if (!maHD.isEmpty()) {
-            renderOrderDetail(maHD); 
+            String maHD = txt_MaHD.getText().trim();
+            if (!maHD.isEmpty()) {
+                renderOrderDetail(maHD);
+            }
+
         }
-        
-    }
     }//GEN-LAST:event_txt_MaHDKeyPressed
     private void renderReturnOrderInfor() {
         txtMaHD.setText("");
@@ -783,16 +786,16 @@ public class DoiTra_GUI extends javax.swing.JPanel {
 
     }
 
-    private void createNewReturnOrder(DoiTra newReturnOrder) {
+    private void createNewReturnOrder(DoiTra newReturnOrder) throws SQLException {
         if ((DoiTra_DAO.create(newReturnOrder))) {
             Notifications.getInstance().show(Notifications.Type.SUCCESS, "Thêm hóa đơn đổi trả thành công");
-            ChiTietDoiTra_DAO.createReturnOrderDetail(newReturnOrder,listDoiTra);
-            
+            ChiTietDoiTra_DAO.createReturnOrderDetail(newReturnOrder, listDoiTra);
+            refesh();
+
         } else {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Thêm không thành công");
         }
     }
-
 
     private void updateTienTra() {
         DecimalFormat df = new DecimalFormat("#,###");
@@ -801,13 +804,13 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             txt_soTienTra.setText("0 VND");
         } else {
             for (int i = 0; i < tblModel_SP.getRowCount(); i++) {
-                String maThuocInTable = tblModel_SP.getValueAt(i, 0).toString(); 
-                int soLuongInTable = Integer.parseInt(tblModel_SP.getValueAt(i, 2).toString()); 
-                Thuoc sanPhamInTable = new Thuoc_DAO().getThuoc(maThuocInTable); 
+                String maThuocInTable = tblModel_SP.getValueAt(i, 0).toString();
+                int soLuongInTable = Integer.parseInt(tblModel_SP.getValueAt(i, 2).toString());
+                Thuoc sanPhamInTable = new Thuoc_DAO().getThuoc(maThuocInTable);
 
-                if (sanPhamInTable != null) { 
-                    double thanhTien = sanPhamInTable.getGia() * soLuongInTable; 
-                    tienTra += thanhTien;  
+                if (sanPhamInTable != null) {
+                    double thanhTien = sanPhamInTable.getGia() * soLuongInTable;
+                    tienTra += thanhTien;
                 } else {
                     System.out.println("Không tìm thấy thuốc với mã: " + maThuocInTable);
                 }
@@ -899,10 +902,10 @@ public class DoiTra_GUI extends javax.swing.JPanel {
             popup.setVisible(false);
         }
     }
-    
+
     public String TaoID() {
-        String prefix = "HDDT";      
-        int nam = LocalDate.now().getYear() % 100; 
+        String prefix = "HDDT";
+        int nam = LocalDate.now().getYear() % 100;
         int thang = LocalDate.now().getMonthValue();
         int ngay = LocalDate.now().getDayOfMonth();
         prefix += String.format("%02d%02d%02d", nam, thang, ngay) + generateRandomString(6);
@@ -929,7 +932,13 @@ public class DoiTra_GUI extends javax.swing.JPanel {
         return sb.toString();
     }
 
-   
+    public static void refesh() throws SQLException {
+        try {
+            Main.app.refeshReturnOrder();
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(DoiTra_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_TaoHDDT;
     private javax.swing.JButton btn_Them;

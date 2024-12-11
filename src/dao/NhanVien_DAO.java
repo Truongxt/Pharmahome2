@@ -291,25 +291,25 @@ public class NhanVien_DAO {
     public String generateID() {
         String result = "NV";
         LocalDate time = LocalDate.now();
+        DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("ddMMyy");
+        result += dateFormater.format(time);
         String query = """
-                       select top 1 * from [HoaDon]
-                       where maHD like ?
-                       order by maHD desc
+                       select top 1 * from [NhanVien]
+                       where maNhanVien like ?
+                       order by maNhanVien desc
                        """;
 
         try {
             PreparedStatement st = ConnectDB.conn.prepareStatement(query);
             st.setString(1, result + "%");
             ResultSet rs = st.executeQuery();
-            LocalDate ngayVaoLam = LocalDate.now();
-            String date = String.format("%02d",ngayVaoLam.getDayOfMonth()) + "" + ngayVaoLam.getMonthValue() + "" + (ngayVaoLam.getYear() + "").substring(2);
             if (rs.next()) {
-                String lastID = rs.getString("maHD");
+                String lastID = rs.getString("maNhanVien");
                 String sNumber = lastID.substring(lastID.length() - 2);
                 int num = Integer.parseInt(sNumber) + 1;
-                result += date + lastID.substring(2) + String.format("%03d", num);
+                result += String.format("%03d", num);
             } else {
-                result += date + String.format("%05d", 0);
+                result += String.format("%03d", 0);
             }
         } catch (Exception e) {
             e.printStackTrace();

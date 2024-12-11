@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import main.Main;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -54,12 +56,13 @@ public class KhachHang_GUI extends javax.swing.JPanel {
             Logger.getLogger(KhachHang_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         kh_DAO = new KhachHang_DAO();
-        model = new DefaultTableModel(new String[]{"Mã khách hàng", "Tên khách hàng", "Điểm tích lũy", "Tổng tiền tích lũy"}, 0);
+        jtf_maKhachHang.setText(kh_DAO.generateID());
+
+        model = new DefaultTableModel(new String[]{"Mã khách hàng", "Tên khách hàng", "Số điện thoại", "Địa chỉ"}, 0);
         tbl_khachHang.setModel(model);
-        listKH = new KhachHang_DAO().getAllKhachHang();
-        jtf_maKhachHang.setText(kh_DAO.TaoID());
+        listKH = kh_DAO.getAllKhachHang();
+
         taiThongTinLenBang(listKH);
-        alterTable();
     }
 
     /**
@@ -73,7 +76,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         lbl_soDienThoai = new javax.swing.JLabel();
-        jtf_soDienThoai = new javax.swing.JTextField();
+        jtf_sdtTimKiem = new javax.swing.JTextField();
         btn_loc = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -94,10 +97,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
         jtf_sdt = new javax.swing.JTextField();
         pnl_diemTichLuy = new javax.swing.JPanel();
         lbl_diemTichLuy = new javax.swing.JLabel();
-        jtf_diemTichLuy = new javax.swing.JTextField();
-        pnl_tongThanhToan = new javax.swing.JPanel();
-        lbl_tongThanhToan = new javax.swing.JLabel();
-        jtf_tongThanhToan = new javax.swing.JTextField();
+        jtf_diaChi = new javax.swing.JTextField();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tìm kiếm", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
 
@@ -121,7 +121,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(lbl_soDienThoai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtf_soDienThoai, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addComponent(jtf_sdtTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                 .addGap(551, 551, 551)
                 .addComponent(btn_loc, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                 .addGap(61, 61, 61))
@@ -136,7 +136,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
                         .addComponent(lbl_soDienThoai, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(jtf_soDienThoai, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                        .addComponent(jtf_sdtTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(btn_loc, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)))
@@ -240,6 +240,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
         jtf_maKhachHang.setFocusable(false);
         jtf_maKhachHang.setMaximumSize(new java.awt.Dimension(2147483647, 40));
         jtf_maKhachHang.setMinimumSize(new java.awt.Dimension(64, 30));
+        jtf_maKhachHang.setOpaque(true);
         jtf_maKhachHang.setPreferredSize(new java.awt.Dimension(100, 30));
         jtf_maKhachHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -290,37 +291,16 @@ public class KhachHang_GUI extends javax.swing.JPanel {
         pnl_diemTichLuy.setPreferredSize(new java.awt.Dimension(200, 30));
         pnl_diemTichLuy.setLayout(new javax.swing.BoxLayout(pnl_diemTichLuy, javax.swing.BoxLayout.LINE_AXIS));
 
-        lbl_diemTichLuy.setText("Điểm tích lũy:");
+        lbl_diemTichLuy.setText("Địa chỉ:");
         lbl_diemTichLuy.setPreferredSize(new java.awt.Dimension(150, 16));
         pnl_diemTichLuy.add(lbl_diemTichLuy);
 
-        jtf_diemTichLuy.setEditable(false);
-        jtf_diemTichLuy.setFont(jtf_diemTichLuy.getFont().deriveFont((float)16));
-        jtf_diemTichLuy.setFocusable(false);
-        jtf_diemTichLuy.setMaximumSize(new java.awt.Dimension(2147483647, 40));
-        jtf_diemTichLuy.setPreferredSize(new java.awt.Dimension(100, 30));
-        pnl_diemTichLuy.add(jtf_diemTichLuy);
+        jtf_diaChi.setFont(jtf_diaChi.getFont().deriveFont((float)16));
+        jtf_diaChi.setMaximumSize(new java.awt.Dimension(2147483647, 40));
+        jtf_diaChi.setPreferredSize(new java.awt.Dimension(100, 30));
+        pnl_diemTichLuy.add(jtf_diaChi);
 
         pn_info.add(pnl_diemTichLuy, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 168, 385, 40));
-
-        pnl_tongThanhToan.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        pnl_tongThanhToan.setMaximumSize(new java.awt.Dimension(1000, 40));
-        pnl_tongThanhToan.setMinimumSize(new java.awt.Dimension(300, 30));
-        pnl_tongThanhToan.setPreferredSize(new java.awt.Dimension(200, 30));
-        pnl_tongThanhToan.setLayout(new javax.swing.BoxLayout(pnl_tongThanhToan, javax.swing.BoxLayout.LINE_AXIS));
-
-        lbl_tongThanhToan.setText("Tổng thanh toán:");
-        lbl_tongThanhToan.setPreferredSize(new java.awt.Dimension(150, 16));
-        pnl_tongThanhToan.add(lbl_tongThanhToan);
-
-        jtf_tongThanhToan.setEditable(false);
-        jtf_tongThanhToan.setFont(jtf_tongThanhToan.getFont().deriveFont((float)16));
-        jtf_tongThanhToan.setFocusable(false);
-        jtf_tongThanhToan.setMaximumSize(new java.awt.Dimension(2147483647, 40));
-        jtf_tongThanhToan.setPreferredSize(new java.awt.Dimension(100, 30));
-        pnl_tongThanhToan.add(jtf_tongThanhToan);
-
-        pn_info.add(pnl_tongThanhToan, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 214, 385, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -349,19 +329,17 @@ public class KhachHang_GUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_locActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_locActionPerformed
-        KhachHang kh = timKiemTheoSoDienThoai(jtf_soDienThoai.getText().trim());
-        if (jtf_soDienThoai.getText().trim().isBlank()) {
+        KhachHang kh = timKiemTheoSoDienThoai(jtf_sdtTimKiem.getText().trim());
+        if (jtf_sdtTimKiem.getText().trim().isBlank()) {
             Notifications.getInstance().show(Notifications.Type.ERROR, "Số điện thoại không được để trống!");
-
+            return;
         }
         if (kh == null) {
-            JOptionPane.showConfirmDialog(null, "Khách hàng chưa phải là thành viên");
-            jtf_soDienThoai.setFocusable(true);
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ERROR, "Không tìm thấy khách hàng!");
         } else {
             ArrayList<KhachHang> list = new ArrayList<>();
             list.add(kh);
             taiThongTinLenBang(list);
-            jtf_soDienThoai.setText("");
         }
     }//GEN-LAST:event_btn_locActionPerformed
 
@@ -391,36 +369,19 @@ public class KhachHang_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_xuatFileActionPerformed
 
-    private void btn_themMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themMoiActionPerformed
-        try {
-            // TODO add your handling code here:
-            KhachHang kh = new KhachHang(jtf_maKhachHang.getText(), jtf_tenKhachHang.getText(), jtf_sdt.getText(), 0);
-            boolean isCompleted = KhachHang_DAO.taoMoi(kh);
-            if (!isCompleted) {
-                Notifications.getInstance().show(Notifications.Type.ERROR, "Khách hàng đã tồn tại");
-                return;
-            }
-            taiThongTinLenBang(listKH);
-            lamMoiForm();
-            Notifications.getInstance().show(Notifications.Type.SUCCESS, "Thêm khách hàng thành công!");
-
-        } catch (Exception ex) {
-            Notifications.getInstance().show(Notifications.Type.ERROR, ex.getMessage());
-        }
-    }//GEN-LAST:event_btn_themMoiActionPerformed
-
     private void btn_capNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capNhatActionPerformed
         int row = tbl_khachHang.getSelectedRow();
-//        if (row != -1)
         try {
             if (row != -1) {
-                KhachHang_DAO.capNhat(jtf_maKhachHang.getText(), getGiaTriForm());
+                KhachHang newKH = new KhachHang(jtf_maKhachHang.getText(), jtf_tenKhachHang.getText().trim(), jtf_sdt.getText().trim(), jtf_diaChi.getText(),java.sql.Date.valueOf(LocalDate.now()));
 
+                boolean result = kh_DAO.capNhat(jtf_maKhachHang.getText(), newKH);
             } else {
                 Notifications.getInstance().show(Notifications.Type.ERROR, "Chưa chọn khách hàng muốn cập nhật thông tin!");
                 return;
             }
             Notifications.getInstance().show(Notifications.Type.SUCCESS, "Cập nhật thông tin khách hàng thành công!");
+            refresh();
 
         } catch (Exception ex) {
             Logger.getLogger(KhachHang_GUI.class
@@ -430,28 +391,55 @@ public class KhachHang_GUI extends javax.swing.JPanel {
 
     private void btn_lamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lamMoiActionPerformed
         // TODO add your handling code here:
-        lamMoiForm();
-        jtf_soDienThoai.setText("");
+        refresh();
     }//GEN-LAST:event_btn_lamMoiActionPerformed
 
     private void tbl_khachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_khachHangMouseClicked
         // TODO add your handling code here:
         int index = tbl_khachHang.getSelectedRow();
-        String maKhachHang = tbl_khachHang.getValueAt(index, 0) + "";
-        KhachHang kh = kh_DAO.getKhachHang(maKhachHang);
         jtf_maKhachHang.setText(tbl_khachHang.getValueAt(index, 0) + "");
         jtf_tenKhachHang.setText(tbl_khachHang.getValueAt(index, 1) + "");
-        jtf_sdt.setText(kh.getSdt());
-        jtf_diemTichLuy.setText(tbl_khachHang.getValueAt(index, 2) + "");
-        jtf_tongThanhToan.setText(tbl_khachHang.getValueAt(index, 3) + "");
+        jtf_sdt.setText(tbl_khachHang.getValueAt(index, 2) + "");
+        jtf_diaChi.setText(tbl_khachHang.getValueAt(index, 3) + "");
     }//GEN-LAST:event_tbl_khachHangMouseClicked
 
-    public final void alterTable() {
-        DefaultTableCellRenderer rightAlign = new DefaultTableCellRenderer();
-        rightAlign.setHorizontalAlignment(JLabel.RIGHT);
-        //// Align
-        tbl_khachHang.getColumnModel().getColumn(2).setCellRenderer(rightAlign);
-    }
+    private void btn_themMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themMoiActionPerformed
+        try {
+            String maKhachHang = jtf_maKhachHang.getText();
+            String tenKhachHang = jtf_tenKhachHang.getText();
+            String sdt = jtf_sdt.getText().trim();
+            String diaChi = jtf_diaChi.getText().trim();
+
+            if (maKhachHang.isEmpty() || tenKhachHang.isEmpty() || diaChi.isEmpty()) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Vui lòng điền đầy đủ thông tin trước khi thêm thông tin");
+                return;
+            }
+            if (!sdt.matches("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Vui lòng nhập đúng số điện thoại và đủ ký 10 ký tự");
+                return;
+            }
+            String regex = "[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?~`]";
+
+            if (tenKhachHang.matches(regex)) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Tên khách hàng không được chứa ký tự đặc biệt");
+                return;
+            }
+            KhachHang kh = new KhachHang(jtf_maKhachHang.getText(), jtf_tenKhachHang.getText().trim(), jtf_sdt.getText().trim(), jtf_diaChi.getText(), java.sql.Date.valueOf(LocalDate.now()));
+            boolean isCompleted = kh_DAO.taoMoi(kh);
+            if (!isCompleted) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Thêm khách hàng thất bại");
+                return;
+            } else {
+                listKH.add(kh);
+                taiThongTinLenBang(listKH);
+                refresh();
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, "Thêm khách hàng thành công!");
+            }
+
+        } catch (Exception ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, ex.getMessage());
+        }
+    }//GEN-LAST:event_btn_themMoiActionPerformed
 
     public static void taoFileExcel(ArrayList<KhachHang> list, String filePath) {
         Workbook workbook = new XSSFWorkbook();
@@ -481,7 +469,7 @@ public class KhachHang_GUI extends javax.swing.JPanel {
 
         // Tạo header row
         Row headerRow = sheet.createRow(2);
-        String[] columns = {"Mã khách hàng", "Tên", "Số điện thoại", "Điểm tích lũy"};
+        String[] columns = {"Mã khách hàng", "Tên", "Số điện thoại", "Địa chỉ", "Ngày tạo"};
 
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
@@ -496,7 +484,9 @@ public class KhachHang_GUI extends javax.swing.JPanel {
             row.createCell(0).setCellValue(khachHang.getMaKH());
             row.createCell(1).setCellValue(khachHang.getTenKhachHang());
             row.createCell(2).setCellValue(khachHang.getSdt());
-            row.createCell(3).setCellValue(khachHang.getDiemTichLuy());
+            row.createCell(3).setCellValue(khachHang.getDiaChi());
+            row.createCell(4).setCellValue(khachHang.getNgayLapTaiKhoan());
+
         }
 
         // Ghi vào file
@@ -512,29 +502,19 @@ public class KhachHang_GUI extends javax.swing.JPanel {
             }
         }
     }
-
-    public void lamMoiForm() {
-        jtf_maKhachHang.setText("");
-        jtf_tenKhachHang.setText("");
-        jtf_sdt.setText("");
-        jtf_diemTichLuy.setText("");
-        jtf_tongThanhToan.setText("");
-    }
+//
 
     public final void taiThongTinLenBang(ArrayList<KhachHang> list) {
         model.setRowCount(0);
         for (KhachHang khachHang : list) {
-            Object[] row = new Object[]{khachHang.getMaKH(), khachHang.getTenKhachHang(), khachHang.getDiemTichLuy()};
+            System.out.println(khachHang.getDiaChi());
+            Object[] row = new Object[]{khachHang.getMaKH(), khachHang.getTenKhachHang(), khachHang.getSdt(), khachHang.getDiaChi()};
             model.addRow(row);
         }
     }
 
-    private KhachHang getGiaTriForm() throws Exception {
-        String maKhachHang = jtf_maKhachHang.getText();
-        String tenKhachHang = jtf_tenKhachHang.getText();
-        String sdt = jtf_sdt.getText().trim();
-        Long diemTichLuy = Long.valueOf(jtf_diemTichLuy.getText());
-        return new KhachHang(maKhachHang, tenKhachHang, sdt, diemTichLuy);
+    public void refresh() {
+        Main.app.refeshCustomer();
     }
 
     public KhachHang timKiemTheoSoDienThoai(String number) {
@@ -555,24 +535,21 @@ public class KhachHang_GUI extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jtf_diemTichLuy;
+    private javax.swing.JTextField jtf_diaChi;
     private javax.swing.JTextField jtf_maKhachHang;
     private javax.swing.JTextField jtf_sdt;
-    private javax.swing.JTextField jtf_soDienThoai;
+    private javax.swing.JTextField jtf_sdtTimKiem;
     private javax.swing.JTextField jtf_tenKhachHang;
-    private javax.swing.JTextField jtf_tongThanhToan;
     private javax.swing.JLabel lbl_diemTichLuy;
     private javax.swing.JLabel lbl_maKhachHang;
     private javax.swing.JLabel lbl_sdt;
     private javax.swing.JLabel lbl_soDienThoai;
     private javax.swing.JLabel lbl_tenKhachHang;
-    private javax.swing.JLabel lbl_tongThanhToan;
     private javax.swing.JPanel pn_info;
     private javax.swing.JPanel pnl_diemTichLuy;
     private javax.swing.JPanel pnl_maKhachHang;
     private javax.swing.JPanel pnl_sdt;
     private javax.swing.JPanel pnl_tenKhachHang;
-    private javax.swing.JPanel pnl_tongThanhToan;
     private javax.swing.JTable tbl_khachHang;
     // End of variables declaration//GEN-END:variables
 }

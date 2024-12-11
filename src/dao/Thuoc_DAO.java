@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Thuoc_DAO {
 
@@ -315,7 +316,7 @@ public class Thuoc_DAO {
         return list;
     }
 
-    public ArrayList<Thuoc> filter(String loaiThuoc, String xuatXu, String ten) {
+    public ArrayList<Thuoc> filter(String loaiThuoc, String xuatXu, String ten, String ma) {
         ArrayList<Thuoc> list = new ArrayList<>();
 
         try {
@@ -333,6 +334,9 @@ public class Thuoc_DAO {
             if (loaiThuoc.length() > 0 && !loaiThuoc.equalsIgnoreCase("Tất cả")) {
                 query.append("AND tenLoai = ? ");
             }
+            if (ma.length() > 0) {
+                query.append("AND maThuoc = ? ");
+            }
 
             PreparedStatement ps = ConnectDB.conn.prepareStatement(query.toString());
 
@@ -344,6 +348,10 @@ public class Thuoc_DAO {
             }
             if (loaiThuoc.length() > 0 && !loaiThuoc.equalsIgnoreCase("Tất cả")) {
                 ps.setString(index++, loaiThuoc);
+            }
+            if (ma.length() > 0) {
+                ps.setString(index++, ma);
+
             }
 
             ResultSet rs = ps.executeQuery();
@@ -533,5 +541,35 @@ public class Thuoc_DAO {
         }
         return list;
     }
-    
+
+    public String generateID() {
+        String result = "SP";
+        LocalDate time = LocalDate.now();
+        DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("ddMMyy");
+        result += dateFormater.format(time);
+        String query = """
+                       select top 1 * from [Thuoc]
+                       where maThuoc like ?
+                       order by maThuoc desc
+                       """;
+
+        try {
+            PreparedStatement st = ConnectDB.conn.prepareStatement(query);
+            st.setString(1, result + "%");
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String lastID = rs.getString("maThuoc");
+                String sNumber = lastID.substring(lastID.length() - 2);
+                int num = Integer.parseInt(sNumber) + 1;
+                result += String.format("%03d", num);
+            } else {
+                result += String.format("%03d", 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

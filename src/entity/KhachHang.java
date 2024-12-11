@@ -1,5 +1,7 @@
 package entity;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class KhachHang {
@@ -46,34 +48,38 @@ public class KhachHang {
         this.sdt = sdt;
     }
 
-    /**
-     * @return the diemTichLuy
-     */
-    public double getDiemTichLuy() {
-        return diemTichLuy;
+    public String getDiaChi() {
+        return diaChi;
     }
 
-    /**
-     * @param diemTichLuy the diemTichLuy to set
-     */
-    public void setDiemTichLuy(double diemTichLuy) {
-        this.diemTichLuy = diemTichLuy;
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+
+    public Date getNgayLapTaiKhoan() {
+        return ngayLapTaiKhoan;
+    }
+
+    public void setNgayLapTaiKhoan(Date ngayLapTaiKhoan) {
+        this.ngayLapTaiKhoan = ngayLapTaiKhoan;
     }
 
     private String maKH;
     private String tenKhachHang;
     private String sdt;
-    private double diemTichLuy;
+    private String diaChi;
+    private Date ngayLapTaiKhoan;
 
-  
-    public KhachHang(String maKH, String tenKhachHang, String sdt, double diemTichLuy) {
+    public KhachHang(String maKH, String tenKhachHang, String sdt, String diaChi, Date ngayLapTaiKhoan) {
         this.maKH = maKH;
         this.tenKhachHang = tenKhachHang;
         this.sdt = sdt;
-        this.diemTichLuy = diemTichLuy;
+        this.diaChi = diaChi;
+        this.ngayLapTaiKhoan = ngayLapTaiKhoan;
     }
 
-   
+    
+
     @Override
     public int hashCode() {
         int hash = 7;

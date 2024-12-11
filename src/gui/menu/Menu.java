@@ -4,6 +4,9 @@
  */
 package gui.menu;
 
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import gui.event.EventMenu;
 import gui.event.EventMenuSelected;
@@ -16,6 +19,7 @@ import gui.swing.ScrollBarCustom;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,6 +30,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -39,6 +46,10 @@ public class Menu extends javax.swing.JPanel {
     //kiểm soát vẽ components
     private boolean customPaintEnabled = true;
 
+    public boolean isCustomPaintEnabled() {
+        return customPaintEnabled;
+    }
+
     public void setCustomPaintEnabled(boolean enabled) {
         this.customPaintEnabled = enabled;
         repaint();
@@ -46,6 +57,12 @@ public class Menu extends javax.swing.JPanel {
 
     public void addEvent(EventMenuSelected event) {
         this.event = event;
+    }
+
+    public void setMenuItemCustomPaint(boolean enabled) {
+        if (menuItem != null) {
+            menuItem.setCustomPaintEnabled(enabled);
+        }
     }
 
     /**
@@ -85,11 +102,69 @@ public class Menu extends javax.swing.JPanel {
     private EventShowPopupMenu eventShowPopup;
     private boolean enableMenu = true;
     private boolean showMenu = true;
-    private MenuItem menuItem;
+    private static MenuItem menuItem;
+
+    public MenuItem getItemFull() {
+        return itemFull;
+    }
+
+    public void setItemFull(MenuItem itemFull) {
+        this.itemFull = itemFull;
+    }
+    private MenuItem itemFull;
+
+    public EventMenuSelected getEvent() {
+        return event;
+    }
+
+    public void setEvent(EventMenuSelected event) {
+        this.event = event;
+    }
+
+    public EventShowPopupMenu getEventShowPopup() {
+        return eventShowPopup;
+    }
+
+    public void setEventShowPopup(EventShowPopupMenu eventShowPopup) {
+        this.eventShowPopup = eventShowPopup;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public void setPanel(JPanel panel) {
+        this.panel = panel;
+    }
+
+    public Profile getProfile2() {
+        return profile2;
+    }
+
+    public void setProfile2(Profile profile2) {
+        this.profile2 = profile2;
+    }
+
+    public JScrollPane getSp() {
+        return sp;
+    }
+
+    public void setSp(JScrollPane sp) {
+        this.sp = sp;
+    }
 
     public Menu() {
         initComponents();
         setOpaque(false);
+
         sp.getViewport().setOpaque(false);
         sp.setVerticalScrollBar(new ScrollBarCustom());
         layout = new MigLayout("wrap, fillx, insets 0", "[fill]", "[]-25[]");
@@ -101,7 +176,7 @@ public class Menu extends javax.swing.JPanel {
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/business.png")), "Bán hàng"));
 
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/drugs.png")), "Thuốc"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn","Tạo hóa đơn đổi trả", "Lịch sử hóa đơn", "Lịch sử hóa đơn đổi trả"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn", "Tạo hóa đơn đổi trả", "Lịch sử hóa đơn", "Lịch sử hóa đơn đổi trả"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/analysis.png")), "Thống kê", "Thuốc", "Khách hàng", "Doanh thu"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/computer.png")), "Báo cáo", "Phiếu kiểm tiền", "Kết toán", "Danh sách phiếu kiểm tiền", "Danh sách kết toán"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/end.png")), "Khách hàng"));
@@ -112,7 +187,8 @@ public class Menu extends javax.swing.JPanel {
     }
 
     private void addMenu(ModelMenu menu) {
-        panel.add(new MenuItem(menu, getEventMenu(), event, panel.getComponentCount()), "h 100!");
+        itemFull = new MenuItem(menu, getEventMenu(), event, panel.getComponentCount());
+        panel.add(itemFull, "h 100!");
     }
 
     // ẩn tất cả menu
@@ -211,7 +287,12 @@ public class Menu extends javax.swing.JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         if (!customPaintEnabled) {
-            super.paintComponent(g); // Sử dụng vẽ mặc định
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gp = new GradientPaint(0, 0, Color.decode("#3C3B3F"), getWidth(), 0, Color.decode("#605C3C"));
+            g2.setPaint(gp);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            super.paintComponent(g);
             return;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -223,6 +304,12 @@ public class Menu extends javax.swing.JPanel {
         super.paintComponent(g);
     }
 
+    public void setDarkBackGround() {
+        FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("theme");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 15));
+        FlatArcDarkIJTheme.setup();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panel;

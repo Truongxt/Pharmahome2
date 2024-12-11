@@ -379,12 +379,17 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
         }
         LocalDate ngayBatDau = ConvertDate.convert(jDate_batDau.getDate());
         LocalDate ngayKetThuc = ConvertDate.convert(jDate_ketThuc.getDate());
-        if(ngayBatDau.isAfter(ngayKetThuc)){
+        if (ngayBatDau.isAfter(ngayKetThuc)) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Ngày bắt đầu phải trước ngày kết thúc");
             return;
         }
 
         ArrayList<HoaDon> filter = new HoaDon_DAO().filter(maHoaDon, sdt, doanhThu, ngayBatDau, ngayKetThuc);
+        System.out.println(filter);
+        if (filter.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Không tìm thấy hóa đơn!");
+            return;
+        }
         for (HoaDon hd : filter) {
             Object[] obj = initObjectHD(hd);
             modelHD.addRow(obj);
@@ -479,10 +484,7 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
         fileChooser.setDialogTitle("Chọn đường dẫn và tên file");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         String priceFrom, priceTo;
-        String orderID = txt_maHoaDon.getText();
-        String phone = txt_SoDienThoai.getText();
 
-        if (orderID.trim().length() <= 0 && phone.trim().length() <= 0) {
             if (JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất toàn bộ hoá đơn ?", "Xuất file excel", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 int userSelection = fileChooser.showSaveDialog(null);
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -492,45 +494,7 @@ public class LichSuHoaDon_GUI extends javax.swing.JPanel {
 
                     // Gọi phương thức để tạo file Excel với đường dẫn và tên file đã chọn
                     createExcel(new HoaDon_DAO().getAllHoaDon(), filePath + ".xlsx");
-                }
             }
-//            if (jcb_doanhThu.getSelectedIndex() == 0) {
-//                priceFrom = "";
-//                priceTo = "";
-//            } else if (jcb_doanhThu.getSelectedIndex() == 1) {
-//                priceFrom = "";
-//                priceTo = "100000";
-//            } else if (jcb_doanhThu.getSelectedIndex() == 2) {
-//                priceFrom = "100000";
-//                priceTo = "500000";
-//            } else if (jcb_doanhThu.getSelectedIndex() == 3) {
-//                priceFrom = "500000";
-//                priceTo = "1000000";
-//            } else {
-//                priceFrom = "1000000";
-//                priceTo = "";
-//            }
-
-//            Date begin = jDate_batDau.getDate();
-//            begin.setHours(0);
-//            begin.setMinutes(0);
-//            Date end = jDate_ketThuc.getDate();
-//            end.setHours(23);
-//            end.setMinutes(59);
-//            ArrayList<HoaDon> list = new HoaDon_DAO().getAllHoaDon();
-//            if (list.isEmpty()) {
-//                Notifications.getInstance().show(Notifications.Type.INFO, "Không có hoá đơn !");
-//            } else {
-//                int userSelection = fileChooser.showSaveDialog(null);
-//                if (userSelection == JFileChooser.APPROVE_OPTION) {
-//                    // Lấy đường dẫn và tên file được chọn
-//                    File fileToSave = fileChooser.getSelectedFile();
-//                    String filePath = fileToSave.getAbsolutePath();
-//
-//                    // Gọi phương thức để tạo file Excel với đường dẫn và tên file đã chọn
-//                    createExcel(list, filePath + ".xlsx");
-//                }
-//            }
         }
     }//GEN-LAST:event_xuatExcelActionPerformed
 

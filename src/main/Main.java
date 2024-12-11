@@ -122,6 +122,26 @@ public class Main extends javax.swing.JFrame {
         main.showForm(new HoaDon_GUI(tk));
     }
 
+    public static void refeshCustomer() {
+        main.showForm(new KhachHang_GUI());
+    }
+
+    public static void refeshEmp() throws SQLException {
+        main.showForm(new NhanVien_GUI());
+    }
+
+    public static void refeshPro() throws SQLException, UnsupportedLookAndFeelException {
+        main.showForm(new Thuoc_GUI());
+    }
+
+    public static void refeshSup() throws SQLException, UnsupportedLookAndFeelException {
+        main.showForm(new NhaCungCap_GUI());
+    }
+
+    public static void refeshReturnOrder() throws SQLException, UnsupportedLookAndFeelException {
+        main.showForm(new DoiTra_GUI(tk));
+    }
+
     public void setAnimator(Animator animator) {
         this.animator = animator;
     }
@@ -288,6 +308,14 @@ public class Main extends javax.swing.JFrame {
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Bạn không có quyền truy cập vào mục này!");
 
                     }
+                } else if (menuIndex == 8) {
+                    if (JOptionPane.showConfirmDialog(null,
+                            "Bạn muốn thoát khỏi ứng dụng Pharmahome?", "Đóng ứng dụng?",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        ConnectDB.disconnect();
+                        System.exit(0);
+                    }
                 }
             }
         });
@@ -401,6 +429,13 @@ public class Main extends javax.swing.JFrame {
     public void initHeaderLabel() {
         vaiTro = new VaiTro_DAO().getVaiTro(tk.getVaiTro().getMaVaiTro());
         nhanVien = new NhanVien_DAO().getNhanVien(tk.getNhanVien().getMaNhanVien());
+    }
+
+    public void setDarkBackGround() {
+        FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("theme");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 15));
+        FlatArcDarkIJTheme.setup();
     }
 
     public static void main(String args[]) throws SQLException {

@@ -51,11 +51,18 @@ public class MenuItem extends javax.swing.JPanel {
         return index;
     }
 
+    public void setCustomPaintEnabled(boolean enabled) {
+        
+        this.customPaintEnabled = enabled;
+        repaint();
+    }
+
     private float alpha;
     private ModelMenu menu;
     private boolean open;
     private EventMenuSelected eventSelected;
     private int index;
+    private boolean customPaintEnabled = true;
 
     public MenuItem(ModelMenu menu, EventMenu event, EventMenuSelected eventSelected, int index) {
         initComponents();
@@ -98,6 +105,31 @@ public class MenuItem extends javax.swing.JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        if (!customPaintEnabled) {
+            int width = getWidth();
+            int height = getPreferredSize().height;
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(Color.decode("#2c3e50"));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            g2.fillRect(0, 65, width, 38);
+            g2.setComposite(AlphaComposite.SrcOver);
+            g2.fillRect(0, 100, width, height - 100);
+            g2.setColor(new Color(100, 100, 100));
+            // chứa menu con thì mới vẽ đường line và vẽ mũi tên xuống cho các component cha
+            if (menu.getSubMenu().length > 0) {
+                g2.drawLine(30, 100, 30, height - 10);
+                createArrowButton(g2);
+
+            }
+            // vẽ đường line ngang cho các submenu
+            for (int i = 0; i < menu.getSubMenu().length; i++) {
+                int y = ((i + 1) * 35 + 100) - 10;
+                g2.drawLine(30, y, 38, y);
+            }
+            super.paintComponent(g);
+            return;
+        }
         int width = getWidth();
         int height = getPreferredSize().height;
         Graphics2D g2 = (Graphics2D) g;

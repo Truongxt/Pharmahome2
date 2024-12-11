@@ -45,9 +45,6 @@ public class NhaCungCap_DAO {
             while (rs.next()) {
                 String maNCC = rs.getString("maNCC");
                 String tenNCC = rs.getString("tenNCC");
-
-                String maKhachHang = rs.getString("maNCC");
-                String tenKhachHang = rs.getString("tenNCC");
                 String diaChi = rs.getString("diaChi");
                 String email = rs.getString("email");
                 String sdt = rs.getString("sdt");

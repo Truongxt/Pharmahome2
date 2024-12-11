@@ -101,7 +101,8 @@ public class LoginForm extends javax.swing.JPanel {
             }
         });
 
-        txtTaiKhoan.setText("NVTRANVietNHan");
+        txtTaiKhoan.setText("NV120924005");
+        txtTaiKhoan.setToolTipText("");
         txtTaiKhoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTaiKhoanActionPerformed(evt);

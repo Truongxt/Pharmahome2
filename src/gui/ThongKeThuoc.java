@@ -50,9 +50,10 @@ public class ThongKeThuoc extends JPanel {
     private static ArrayList<Thuoc> list_Thuoc;
     private static ChiTietHoaDon_DAO cthd;
     private static ThuocVaLuotBan thuocvaluotban;
-    private static DefaultTableModel model = null ;
+    private static DefaultTableModel model = null;
     private static LoaiThuoc_DAO loaiThuoc_dao;
     private static ArrayList<LoaiThuoc> list_LoaiThuoc;
+
     public ThongKeThuoc() throws SQLException {
         initComponents();
         ConnectDB.connect();
@@ -62,8 +63,7 @@ public class ThongKeThuoc extends JPanel {
         updateLoaiThuoc();
         setupSearch();
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -113,7 +113,6 @@ public class ThongKeThuoc extends JPanel {
             }
         });
 
-        btn_ThuocHetHan.setBackground(new java.awt.Color(255, 0, 51));
         btn_ThuocHetHan.setText("Thuốc sắp hết hạn");
         btn_ThuocHetHan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +120,7 @@ public class ThongKeThuoc extends JPanel {
             }
         });
 
-        jButton3.setText("Thuốc sắp hết ");
+        jButton3.setText("Thuốc sắp hết trong kho");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -138,62 +137,57 @@ public class ThongKeThuoc extends JPanel {
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/logo.png"))); // NOI18N
         jButton4.setText("Xuất Excel");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(jButton4)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton2)
-                        .addGap(0, 82, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(cb_LoaiThuoc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tf_Search)
-                            .addComponent(btn_ThuocHetHan, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_Search, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(btn_ThuocHetHan, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tf_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_Search))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(cb_LoaiThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btn_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tf_Search, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tf_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cb_LoaiThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_ThuocHetHan, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_ThuocHetHan, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         tableThuoc.setModel(new javax.swing.table.DefaultTableModel(
@@ -236,9 +230,9 @@ public class ThongKeThuoc extends JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,7 +251,8 @@ public class ThongKeThuoc extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -278,23 +273,18 @@ public class ThongKeThuoc extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tf_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_SearchActionPerformed
-       
-        setupSearch();
-        
 
-     
-        
-     
+        setupSearch();
+
+
     }//GEN-LAST:event_tf_SearchActionPerformed
 
     private void btn_ThuocHetHanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThuocHetHanActionPerformed
         resetTable();
-        list_Thuoc= thuoc_dao.getThuocHetHan1Thang();
+        list_Thuoc = thuoc_dao.getThuocHetHan1Thang();
         updateTable(list_Thuoc);
 
 
-      
-        
     }//GEN-LAST:event_btn_ThuocHetHanActionPerformed
 
     private void btn_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SearchActionPerformed
@@ -303,280 +293,269 @@ public class ThongKeThuoc extends JPanel {
     }//GEN-LAST:event_btn_SearchActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       resetTable();
-       loadDataTable();
+        resetTable();
+        loadDataTable();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void cb_LoaiThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_LoaiThuocActionPerformed
-        String tenLoai= (String) cb_LoaiThuoc.getSelectedItem();
+        String tenLoai = (String) cb_LoaiThuoc.getSelectedItem();
         resetTable();
-        list_Thuoc=thuoc_dao.getThuocTheoLoai(tenLoai);
+        list_Thuoc = thuoc_dao.getThuocTheoLoai(tenLoai);
         updateTable(list_Thuoc);
     }//GEN-LAST:event_cb_LoaiThuocActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         resetTable();
-        list_Thuoc=thuoc_dao.getThuocTonKhoThap();
+        list_Thuoc = thuoc_dao.getThuocTonKhoThap();
         updateTable(list_Thuoc);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void tableThuocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableThuocMouseClicked
-        int i=tableThuoc.getSelectedRow();
-        int month= jMonthChooser1.getMonth()+1;
-        String tenThuoc=(String) tableThuoc.getValueAt(i, 1);
-        int luotBan=(int) tableThuoc.getValueAt(i, 6);
-        
-        String str=(String) tableThuoc.getValueAt(i, 7);
+        int i = tableThuoc.getSelectedRow();
+        int month = jMonthChooser1.getMonth() + 1;
+        String tenThuoc = (String) tableThuoc.getValueAt(i, 1);
+        int luotBan = (int) tableThuoc.getValueAt(i, 6);
+
+        String str = (String) tableThuoc.getValueAt(i, 7);
         String numberStr = str.replaceAll("[^0-9]", "");
-        double doanhThu=Double.parseDouble(numberStr);
-        card1.setDataNormal(new ModelCard("Lượt bán "+tenThuoc+" trong tháng " +month, luotBan, 5, null));
-        card2.setData(new ModelCard("Doanh thu "+tenThuoc+" trong tháng " +month, doanhThu, 10, null));
+        double doanhThu = Double.parseDouble(numberStr);
+        card1.setDataNormal(new ModelCard("Lượt bán " + tenThuoc + " trong tháng " + month, luotBan, 5, null));
+        card2.setData(new ModelCard("Doanh thu " + tenThuoc + " trong tháng " + month, doanhThu, 10, null));
     }//GEN-LAST:event_tableThuocMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Lưu file Excel");
-    int userSelection = fileChooser.showSaveDialog(null);
-    if (userSelection == JFileChooser.APPROVE_OPTION) {
-        String filePath = fileChooser.getSelectedFile().getAbsolutePath() + ".xlsx";
-        xuatFileExcel(list_Thuoc, filePath);
-        Notifications.getInstance().show(Notifications.Type.SUCCESS,  "Xuất file Excel thành công");
-            
-            
-    }
+        fileChooser.setDialogTitle("Lưu file Excel");
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath() + ".xlsx";
+            xuatFileExcel(list_Thuoc, filePath);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, "Xuất file Excel thành công");
+
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
+    private void setupSearch() {
 
-private void setupSearch() {
-    
-    tf_Search.setText("Tìm kiếm thuốc"); // Text mặc định khi không có gì trong trường
+        tf_Search.setText("Tìm kiếm thuốc"); // Text mặc định khi không có gì trong trường
 
-    tf_Search.addFocusListener(new FocusListener() {
-        @Override
-        public void focusGained(FocusEvent e) {
-            // Xóa nội dung khi focus vào trường (nếu nội dung là mặc định)
-            if (tf_Search.getText().equals("Tìm kiếm thuốc")) {
-                tf_Search.setText(""); // Xóa nội dung mặc định khi focus
+        tf_Search.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                // Xóa nội dung khi focus vào trường (nếu nội dung là mặc định)
+                if (tf_Search.getText().equals("Tìm kiếm thuốc")) {
+                    tf_Search.setText(""); // Xóa nội dung mặc định khi focus
+                } else {
+                    tf_Search.selectAll();
+                }
             }
-            else{
-                tf_Search.selectAll();
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Khôi phục nội dung mặc định nếu trường trống khi mất focus
+                if (tf_Search.getText().trim().isEmpty()) {
+                    tf_Search.setText("Tìm kiếm thuốc"); // Khôi phục text mặc định nếu người dùng không nhập gì
+                }
             }
-        }
-
-        @Override
-        public void focusLost(FocusEvent e) {
-            // Khôi phục nội dung mặc định nếu trường trống khi mất focus
-            if (tf_Search.getText().trim().isEmpty()) {
-                tf_Search.setText("Tìm kiếm thuốc"); // Khôi phục text mặc định nếu người dùng không nhập gì
-            }
-        }
-    });
-}
-
-
-
- public void search() {
-    // Lấy từ khóa tìm kiếm và kiểm tra
-    
-    String query = tf_Search.getText().trim();
-    
-    // Kiểm tra nếu là text placeholder hoặc rỗng
-    if (query.equals("Tìm kiếm thuốc") || query.isEmpty()) {
-       Notifications.getInstance().show(Notifications.Type.WARNING,  "Vui lòng nhập từ khóa tìm kiếm");
-        return;
+        });
     }
-    
-   
-   
-    Thuoc thuoc = null;
-    boolean found = false;
 
-    // Tìm theo mã
-    thuoc = thuoc_dao.getThuocTheoMa(query);
-    if (thuoc != null) {
-        list_Thuoc.add(thuoc);
-        found = true;
-    } 
-    
-    // Nếu không tìm thấy theo mã, tìm theo tên
-    if (!found) {
-        thuoc = thuoc_dao.getThuocTheoTen(query);
+    public void search() {
+        // Lấy từ khóa tìm kiếm và kiểm tra
+
+        String query = tf_Search.getText().trim();
+
+        // Kiểm tra nếu là text placeholder hoặc rỗng
+        if (query.equals("Tìm kiếm thuốc") || query.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập từ khóa tìm kiếm");
+            return;
+        }
+
+        Thuoc thuoc = null;
+        boolean found = false;
+
+        // Tìm theo mã
+        thuoc = thuoc_dao.getThuocTheoMa(query);
         if (thuoc != null) {
             list_Thuoc.add(thuoc);
             found = true;
         }
+
+        // Nếu không tìm thấy theo mã, tìm theo tên
+        if (!found) {
+            thuoc = thuoc_dao.getThuocTheoTen(query);
+            if (thuoc != null) {
+                list_Thuoc.add(thuoc);
+                found = true;
+            }
+        }
+
+        // Cập nhật bảng nếu tìm thấy, hiển thị thông báo nếu không tìm thấy
+        if (found) {
+            updateTable(list_Thuoc);
+        } else {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Không tìm thấy thuốc!!!");
+        }
     }
 
-    // Cập nhật bảng nếu tìm thấy, hiển thị thông báo nếu không tìm thấy
-    if (found) {
-        updateTable(list_Thuoc);
-    } else {
-         Notifications.getInstance().show(Notifications.Type.WARNING,  "Không tìm thấy thuốc!!!");    }
-}
-
-    public void initCard(){
+    public void initCard() {
         card1.setColorGradient(new java.awt.Color(211, 28, 215));
         card2.setBackground(new java.awt.Color(10, 30, 214));
         card2.setColorGradient(new java.awt.Color(72, 111, 252));
         //card3.setBackground(new java.awt.Color(194, 85, 1));
-       // card3.setColorGradient(new java.awt.Color(255, 212, 99));
+        // card3.setColorGradient(new java.awt.Color(255, 212, 99));
     }
-    public void init(){
-        thuoc_dao =new Thuoc_DAO();
-        cthd= new ChiTietHoaDon_DAO();
-        model = (DefaultTableModel) tableThuoc.getModel();   
+
+    public void init() {
+        thuoc_dao = new Thuoc_DAO();
+        cthd = new ChiTietHoaDon_DAO();
+        model = (DefaultTableModel) tableThuoc.getModel();
         list_Thuoc = new ArrayList<>();
         loaiThuoc_dao = new LoaiThuoc_DAO();
         list_LoaiThuoc = new ArrayList<>();
     }
-  
-    public void loadDataTable(){
-        int month= jMonthChooser1.getMonth()+1;
+
+    public void loadDataTable() {
+        int month = jMonthChooser1.getMonth() + 1;
         //ArrayList<ThuocVaLuotBan> thuocVaLuotBan= new ArrayList<>();
         //thuocVaLuotBan = cthd.getThuocCoLuotBanCaoNhatTrongThang(1, 2024);
         list_Thuoc = thuoc_dao.getAllThuoc();
-        updateTable(list_Thuoc); 
-        
-       
+        updateTable(list_Thuoc);
+
         try {
-        ThuocVaLuotBan thuoc=cthd.getTop1ThuocCoLuotBanCaoNhatTrongThang(month, 2024);
-        ThuocvaDoanhThu thuocvaDoanhThu=cthd.getTop1ThuocCoDoanhThuCaoNhatTrongThang(month, 2024);
-        card1.setDataNormal(new ModelCard("Lượt bán cao nhất \n"+ thuoc.getThuoc().getTenThuoc(), thuoc.getLuotBan(), PROPERTIES, null));
-        card2.setDataNormal(new ModelCard("Doanh thu cao nhất " + thuocvaDoanhThu.getThuoc().getTenThuoc(), thuocvaDoanhThu.getDoanhThu(), PROPERTIES, null));
+            ThuocVaLuotBan thuoc = cthd.getTop1ThuocCoLuotBanCaoNhatTrongThang(month, 2024);
+            ThuocvaDoanhThu thuocvaDoanhThu = cthd.getTop1ThuocCoDoanhThuCaoNhatTrongThang(month, 2024);
+            card1.setDataNormal(new ModelCard("Lượt bán cao nhất \n" + thuoc.getThuoc().getTenThuoc(), thuoc.getLuotBan(), PROPERTIES, null));
+            card2.setDataNormal(new ModelCard("Doanh thu cao nhất " + thuocvaDoanhThu.getThuoc().getTenThuoc(), thuocvaDoanhThu.getDoanhThu(), PROPERTIES, null));
         } catch (Exception e) {
-             Notifications.getInstance().show(Notifications.Type.WARNING,  "Tháng "+ month +" chưa có dữ liệu");
-           
-           
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Tháng " + month + " chưa có dữ liệu");
+
         }
-        
-    }
-   public void updateTable(ArrayList<Thuoc> arr) {
-    DecimalFormat df = new DecimalFormat("#,##0.##");
 
-    // Xóa hết các dòng trong bảng
-    model.setRowCount(0);
-
-    // Kiểm tra số cột trong bảng trước khi thêm
-    int columnCount = model.getColumnCount();
-    if (columnCount == 0) {
-        System.out.println("Bảng chưa có cột, vui lòng kiểm tra lại việc khởi tạo bảng.");
-        return;  // Nếu bảng chưa có cột, dừng lại để tránh lỗi.
     }
 
-    // Duyệt qua danh sách thuốc và thêm vào bảng
-    for (Thuoc thuoc : arr) {
-        if (thuoc != null) {
-            // Tạo mảng cho mỗi dòng
-            Object[] row = {
-                thuoc.getMaThuoc(),
-                thuoc.getTenThuoc(),
-                thuoc.getSoLuongTon(),
-                thuoc.getHsd(),
-                thuoc.getThue(),
-                df.format(thuoc.getGia()) + " VND",
-                cthd.getsoLuongBan(thuoc.getMaThuoc()),
-                df.format(cthd.getDoanhThu(thuoc.getMaThuoc())) + " VND"
-            };
+    public void updateTable(ArrayList<Thuoc> arr) {
+        DecimalFormat df = new DecimalFormat("#,##0.##");
 
-            // Ensure the row length matches the column count before adding
-            if (row.length == columnCount) {
-                model.addRow(row);  // Thêm dòng vào bảng nếu số cột khớp
-            } else {
-                System.out.println("Số cột không khớp: row.length = " + row.length + ", columnCount = " + columnCount);
+        // Xóa hết các dòng trong bảng
+        model.setRowCount(0);
+
+        // Kiểm tra số cột trong bảng trước khi thêm
+        int columnCount = model.getColumnCount();
+        if (columnCount == 0) {
+            System.out.println("Bảng chưa có cột, vui lòng kiểm tra lại việc khởi tạo bảng.");
+            return;  // Nếu bảng chưa có cột, dừng lại để tránh lỗi.
+        }
+
+        // Duyệt qua danh sách thuốc và thêm vào bảng
+        for (Thuoc thuoc : arr) {
+            if (thuoc != null) {
+                // Tạo mảng cho mỗi dòng
+                Object[] row = {
+                    thuoc.getMaThuoc(),
+                    thuoc.getTenThuoc(),
+                    thuoc.getSoLuongTon(),
+                    thuoc.getHsd(),
+                    thuoc.getThue(),
+                    df.format(thuoc.getGia()) + " VND",
+                    cthd.getsoLuongBan(thuoc.getMaThuoc()),
+                    df.format(cthd.getDoanhThu(thuoc.getMaThuoc())) + " VND"
+                };
+
+                // Ensure the row length matches the column count before adding
+                if (row.length == columnCount) {
+                    model.addRow(row);  // Thêm dòng vào bảng nếu số cột khớp
+                } else {
+                    System.out.println("Số cột không khớp: row.length = " + row.length + ", columnCount = " + columnCount);
+                }
             }
         }
     }
-}
 
-
-
-    
-
-    
-    
-   public void updateLoaiThuoc() {
-    // Cập nhật loại thuốc vào combobox
-    list_LoaiThuoc = loaiThuoc_dao.getAllLoaiThuoc();
-    //cb_LoaiThuoc.removeAllItems();  // Xóa các mục cũ
-    for (LoaiThuoc loaiThuoc : list_LoaiThuoc) {
-        cb_LoaiThuoc.addItem(loaiThuoc.getTenLoai());
+    public void updateLoaiThuoc() {
+        // Cập nhật loại thuốc vào combobox
+        list_LoaiThuoc = loaiThuoc_dao.getAllLoaiThuoc();
+        //cb_LoaiThuoc.removeAllItems();  // Xóa các mục cũ
+        for (LoaiThuoc loaiThuoc : list_LoaiThuoc) {
+            cb_LoaiThuoc.addItem(loaiThuoc.getTenLoai());
+        }
     }
-}
+
     public void resetTable() {
-       
-    model.setRowCount(0);
-    //tableThuoc.removeAll();
-    list_Thuoc.clear();
-    System.out.println("Số dòng trong bảng: " + model.getRowCount());
-    System.out.println("Số cột trong bảng: " + model.getColumnCount());
-    model = new DefaultTableModel(new Object[]{"Mã thuốc", "Tên thuốc", "Số lượng tồn", "HSD", "Thuế", "Giá", "Số lượng bán", "Doanh thu"}, 0);
-    tableThuoc.setModel(model);
 
-}
- public static void xuatFileExcel(ArrayList<Thuoc> listThuoc, String filePath) {
-    Workbook workbook = new XSSFWorkbook();
-    Sheet sheet = workbook.createSheet("Thong Ke Thuoc");
+        model.setRowCount(0);
+        //tableThuoc.removeAll();
+        list_Thuoc.clear();
+        System.out.println("Số dòng trong bảng: " + model.getRowCount());
+        System.out.println("Số cột trong bảng: " + model.getColumnCount());
+        model = new DefaultTableModel(new Object[]{"Mã thuốc", "Tên thuốc", "Số lượng tồn", "HSD", "Thuế", "Giá", "Số lượng bán", "Doanh thu"}, 0);
+        tableThuoc.setModel(model);
 
-    // Tạo tiêu đề
-    Row titleRow = sheet.createRow(0);
-    Cell titleCell = titleRow.createCell(0);
-    titleCell.setCellValue("Thống kê thuốc");
-    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
-
-    CellStyle titleStyle = workbook.createCellStyle();
-    Font titleFont = workbook.createFont();
-    titleFont.setFontHeightInPoints((short) 16);
-    titleFont.setBold(true);
-    titleStyle.setFont(titleFont);
-    titleCell.setCellStyle(titleStyle);
-
-    // Thêm dòng ngày in
-    Row dateRow = sheet.createRow(1);
-    Cell dateCell = dateRow.createCell(0);
-    dateCell.setCellValue("Ngày in: " + new java.util.Date());
-
-    // Tạo dòng tiêu đề cột
-    Row headerRow = sheet.createRow(2);
-    String[] headers = {"Mã thuốc", "Tên thuốc", "Số lượng tồn", "Hạn sử dụng", "Thuế", "Giá", "Số lượng bán", "Doanh thu"};
-    for (int i = 0; i < headers.length; i++) {
-        Cell cell = headerRow.createCell(i);
-        cell.setCellValue(headers[i]);
     }
 
-    // Thêm dữ liệu
-    int rowNum = 3;
-    for (Thuoc thuoc : listThuoc) {
-        Row row = sheet.createRow(rowNum++);
-        row.createCell(0).setCellValue(thuoc.getMaThuoc());
-        row.createCell(1).setCellValue(thuoc.getTenThuoc());
-        row.createCell(2).setCellValue(thuoc.getSoLuongTon());
-        row.createCell(3).setCellValue(thuoc.getHsd().toString());
-        row.createCell(4).setCellValue(thuoc.getThue());
-        row.createCell(5).setCellValue(thuoc.getGia());
-        row.createCell(6).setCellValue(cthd.getsoLuongBan(thuoc.getMaThuoc()));
-        row.createCell(7).setCellValue(cthd.getDoanhThu(thuoc.getMaThuoc()));
+    public static void xuatFileExcel(ArrayList<Thuoc> listThuoc, String filePath) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Thong Ke Thuoc");
+
+        // Tạo tiêu đề
+        Row titleRow = sheet.createRow(0);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Thống kê thuốc");
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setFontHeightInPoints((short) 16);
+        titleFont.setBold(true);
+        titleStyle.setFont(titleFont);
+        titleCell.setCellStyle(titleStyle);
+
+        // Thêm dòng ngày in
+        Row dateRow = sheet.createRow(1);
+        Cell dateCell = dateRow.createCell(0);
+        dateCell.setCellValue("Ngày in: " + new java.util.Date());
+
+        // Tạo dòng tiêu đề cột
+        Row headerRow = sheet.createRow(2);
+        String[] headers = {"Mã thuốc", "Tên thuốc", "Số lượng tồn", "Hạn sử dụng", "Thuế", "Giá", "Số lượng bán", "Doanh thu"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+
+        // Thêm dữ liệu
+        int rowNum = 3;
+        for (Thuoc thuoc : listThuoc) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(thuoc.getMaThuoc());
+            row.createCell(1).setCellValue(thuoc.getTenThuoc());
+            row.createCell(2).setCellValue(thuoc.getSoLuongTon());
+            row.createCell(3).setCellValue(thuoc.getHsd().toString());
+            row.createCell(4).setCellValue(thuoc.getThue());
+            row.createCell(5).setCellValue(thuoc.getGia());
+            row.createCell(6).setCellValue(cthd.getsoLuongBan(thuoc.getMaThuoc()));
+            row.createCell(7).setCellValue(cthd.getDoanhThu(thuoc.getMaThuoc()));
+        }
+
+        // Ghi file
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+            workbook.write(outputStream);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // Ghi file
-    try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
-        workbook.write(outputStream);
-        workbook.close();
-    } catch (IOException e) {
-        e.printStackTrace();
+    public static void main(String[] args) throws SQLException {
+        JFrame frame = new JFrame("Thong Ke Thuoc");
+
+        frame.setSize(800, 600);
+        frame.add(new ThongKeThuoc());
+        frame.setVisible(true);
     }
-}
-   
-public static void main(String[] args) throws SQLException {
-    JFrame frame = new JFrame("Thong Ke Thuoc");
-   
-    frame.setSize(800, 600);
-    frame.add(new ThongKeThuoc());
-    frame.setVisible(true);
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Search;

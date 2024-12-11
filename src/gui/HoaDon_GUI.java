@@ -285,6 +285,7 @@ public class HoaDon_GUI extends javax.swing.JPanel {
                 if (soLuongMoi == 0) {
                     if (JOptionPane.showConfirmDialog(this, "Xóa sản phẩm " + current.getThuoc().getMaThuoc() + " ra khỏi giỏ hàng", "Xóa sản phẩm khỏi giỏ", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         listCTHD.remove(current);
+                        indexThuoc.remove(row);
                         renderCartTable();
                         return;
                     } else {
@@ -1101,7 +1102,7 @@ public class HoaDon_GUI extends javax.swing.JPanel {
 
             //         Nếu chưa có khách hàng sẽ cảnh báo
             if (jtf_tenKH.getText().isEmpty() || jtf_sdt.getText().isEmpty()) {
-                Notifications.getInstance().show(Notifications.Type.WARNING, "Bạn chưa thêm thông tin khách hàng");
+                Notifications.getInstance().show(Notifications.Type.WARNING, "Bạn chưa thêm thông tin khách hàng!");
                 return;
             }
 

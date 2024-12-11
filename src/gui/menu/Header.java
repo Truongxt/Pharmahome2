@@ -9,6 +9,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import dao.Thuoc_DAO;
+import entity.TaiKhoan;
 import entity.Thuoc;
 import glasspanepopup.DefaultOption;
 import gui.menu.mode.ThemeController;
@@ -63,14 +64,24 @@ public class Header extends javax.swing.JPanel {
     public void setTheme() {
         if (ThemeController.isDarkMode()) {
             this.setOpaque(false);
+            main.setDarkBackGround();
             main.getMenu().setCustomPaintEnabled(false);
+            main.getMenu().setMenuItemCustomPaint(false);
+            this.setDarkBackGround();
             ThemeController.applyTheme();
             SwingUtilities.updateComponentTreeUI(mainFrame);
         } else {
             main.getMenu().setCustomPaintEnabled(true);
+            main.getMenu().getItemFull().setCustomPaintEnabled(true);
 
         }
+    }
 
+    public void setDarkBackGround() {
+        FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("theme");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 15));
+        FlatArcDarkIJTheme.setup();
     }
 
     @SuppressWarnings("unchecked")

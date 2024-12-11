@@ -15,7 +15,6 @@ import entity.Thuoc;
 import entity.XuatXu;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,23 +29,14 @@ public class HoaDon_DAO {
         int n = 0;
 
         try {
-            PreparedStatement ps = ConnectDB.conn.prepareStatement("INSERT INTO HoaDon VALUES ( ?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = ConnectDB.conn.prepareStatement("INSERT INTO HoaDon VALUES (?,?,?,?,?,?)");
             ps.setString(1, hoaDon.getMaHD());
             ps.setDate(2, java.sql.Date.valueOf(hoaDon.getNgayLap()));
             ps.setDouble(3, hoaDon.getTongTien());
             ps.setString(4, hoaDon.getNhanVien().getMaNhanVien());
             ps.setString(5, hoaDon.getKhachHang().getMaKH());
-            if (hoaDon.getVoucher().getMaVoucher().isEmpty()) {
-                ps.setString(6, null);
 
-            } else {
-                ps.setString(6, hoaDon.getVoucher().getMaVoucher());
-
-            }
-            ps.setString(7, null);
-            ps.setBoolean(8, hoaDon.isAtm());
-            ps.setDouble(9, hoaDon.getTienDaDua());
-            ps.setBoolean(10, hoaDon.isTrangThai());
+            ps.setString(6, hoaDon.getVoucher().getMaVoucher());
             n = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,28 +107,13 @@ public class HoaDon_DAO {
         int n = 0;
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement(
-                    "UPDATE HoaDon SET ngayLap = ?, tongTien = ?, maVoucher = ?, maKH = ?, maNhanVien = ?, maKetToan = ?, atm = ?, tienDaDua = ?, trangThai = ? WHERE maHD = ?");
+                    "UPDATE HoaDon SET ngayLap = ?, tongTien = ?, maVoucher = ?, maKhachHang = ?, maNhanVien = ? WHERE maHD = ?");
             ps.setDate(1, java.sql.Date.valueOf(newHoaDon.getNgayLap()));
             ps.setDouble(2, newHoaDon.getTongTien());
-            if (newHoaDon.getVoucher().getMaVoucher().equalsIgnoreCase("") || newHoaDon.getVoucher() == null) {
-                ps.setString(3, null);
-            } else {
-                ps.setString(3, newHoaDon.getVoucher().getMaVoucher());
-
-            }
+            ps.setString(3, newHoaDon.getVoucher().getMaVoucher());
             ps.setString(4, newHoaDon.getKhachHang().getMaKH());
             ps.setString(5, newHoaDon.getNhanVien().getMaNhanVien());
-            if (newHoaDon.getKetToan() == null || newHoaDon.getKetToan().getMaKetToan().equalsIgnoreCase("")) {
-                ps.setString(6, null);
-
-            } else {
-                ps.setString(6, newHoaDon.getKetToan().getMaKetToan());
-
-            }
-            ps.setBoolean(7, newHoaDon.isAtm());
-            ps.setDouble(8, newHoaDon.getTienDaDua());
-            ps.setBoolean(9, newHoaDon.isTrangThai());
-            ps.setString(10, maHD);
+            ps.setString(6, maHD);
             n = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -313,12 +288,11 @@ public class HoaDon_DAO {
                 String maVoucher = resultSet.getString("maVoucher");
                 boolean atm = resultSet.getBoolean("atm");
                 Double tienDaDua = resultSet.getDouble("tienDaDua");
-                boolean trangThai = resultSet.getBoolean("trangThai");
                 HoaDon hoaDon = null;
                 if (maVoucher != null) {
-                    hoaDon = new HoaDon(maHoaDon, ngayLap, tongTien, new Voucher_DAO().getVoucher(maVoucher), new KhachHang_DAO().getKhachHang(maKH), new NhanVien_DAO().getNhanVien(maNV), new ChiTietHoaDon_DAO().getAllChiTietHoaDon(), atm, tienDaDua, trangThai);
+                    hoaDon = new HoaDon(maHoaDon, ngayLap, tongTien, new Voucher_DAO().getVoucher(maVoucher), new KhachHang_DAO().getKhachHang(maKH), new NhanVien_DAO().getNhanVien(maNV), new ChiTietHoaDon_DAO().getAllChiTietHoaDon(), atm, tienDaDua);
                 } else {
-                    hoaDon = new HoaDon(maHoaDon, ngayLap, tongTien, new Voucher_DAO().getVoucher(maVoucher), new KhachHang_DAO().getKhachHang(maKH), new NhanVien_DAO().getNhanVien(maNV), new ChiTietHoaDon_DAO().getAllChiTietHoaDon(), atm, tienDaDua, trangThai);
+                    hoaDon = new HoaDon(maHoaDon, ngayLap, tongTien, new Voucher_DAO().getVoucher(maVoucher), new KhachHang_DAO().getKhachHang(maKH), new NhanVien_DAO().getNhanVien(maNV), new ChiTietHoaDon_DAO().getAllChiTietHoaDon(), atm, tienDaDua);
                 }
 
                 kq.add(hoaDon);
@@ -390,21 +364,100 @@ public class HoaDon_DAO {
         return list;
     }
 
-    public int getSoLuongKhachHangNam(int year) {
-        int count = 0;
-        String query = "select count(maKH) as soKhachHang from HoaDon where year(ngayLap) =?";
+    public ArrayList<HoaDon> getAllOrderInAcountingVoucher(String maKetToan) {
+        ArrayList<HoaDon> list = new ArrayList<>();
+
         try {
-            PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
-            ps.setInt(1, year);  // Set the month parameter
-            // Set the year parameter
+            ConnectDB.connect();
+            String sql = "SELECT * FROM HoaDon where maKetToan = ?";
+
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(sql);
+            ps.setString(1, maKetToan);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt("soKhachHang");
+
+            while (rs.next()) {
+                String maHD = rs.getString("maHD");
+                LocalDate ngayLap = rs.getDate("ngayLap").toLocalDate();
+                double tongTien = rs.getDouble("tongTien");
+
+                String maVoucher = rs.getString("maVoucher");
+                String maKhachHang = rs.getString("maKH");
+                String maNhanVien = rs.getString("maNhanVien");
+                KetToan ketToan = new KetToan_DAO().getOne(rs.getString("maKetToan"));
+                boolean atm = rs.getBoolean("atm");
+                double tienDaDua = rs.getDouble("tienDaDua");
+                boolean trangThai = rs.getBoolean("trangThai");
+                ArrayList<ChiTietHoaDon> listCTHD = this.getChiTietHoaDon(maHD);
+                Voucher voucher = new Voucher_DAO().getVoucher(maVoucher);  // Lấy thông tin Voucher
+                KhachHang khachHang = new KhachHang_DAO().getKhachHang(maKhachHang); // Lấy thông tin khách hàng
+                NhanVien nhanVien = new NhanVien_DAO().getNhanVien(maNhanVien); // Lấy thông tin nhân viên
+
+                HoaDon hoaDon = new HoaDon(maHD, ngayLap, tongTien, voucher, khachHang, nhanVien, ketToan, listCTHD, atm, tienDaDua, trangThai);
+                list.add(hoaDon);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return count;
+        return list;
+    }
+
+    public List<HoaDon> getHoaDonSuggestions(String keyword) {
+        List<HoaDon> list = new ArrayList<>();
+        String query = "SELECT * FROM HoaDon WHERE maHD LIKE ?";
+        try {
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDon hd = new HoaDon(
+                        rs.getString("maHD")
+                );
+                list.add(hd);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    public String generateID(NhanVien nv) {
+        String result = "HD";
+        LocalDate time = LocalDate.now();
+        DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("ddMMyyyy");
+
+        result += dateFormater.format(time);
+        String query = """
+                       select top 1 * from [HoaDon]
+                       where maHD like ?
+                       order by maHD desc
+                       """;
+
+        try {
+            PreparedStatement st = ConnectDB.conn.prepareStatement(query);
+            st.setString(1, result + "%");
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String lastID = rs.getString("maHD");
+                String sNumber = lastID.substring(lastID.length() - 2);
+                int num = Integer.parseInt(sNumber) + 1;
+                result += nv.getMaNhanVien().substring(2) + String.format("%05d", num);
+            } else {
+                result += nv.getMaNhanVien().substring(2) + String.format("%05d", 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public HoaDon createNewOrder(NhanVien nv) throws Exception {
+        HoaDon order = new HoaDon(new HoaDon_DAO().generateID(nv));
+        order.setTrangThai(false);
+//        Chỉ hiển thị ngày lập, khi lưu sẽ lấy thời gian tại lúc bấm thanh toán
+        LocalDate now = LocalDate.now();
+        order.setNgayLap(now);
+        return order;
     }
 
     public ArrayList<HoaDon> getAllHoaDonTam() {
@@ -437,6 +490,20 @@ public class HoaDon_DAO {
         }
         return list;
 
+    }
+
+    public boolean updateOrderAcountingVoucher(String orderID, String acountingVoucherID) {
+        try {
+            String sql = "UPDATE [HoaDon] SET maKetToan = ? WHERE maHD = ?";
+            PreparedStatement preparedStatement = ConnectDB.conn.prepareStatement(sql);
+            preparedStatement.setString(1, acountingVoucherID);
+            preparedStatement.setString(2, orderID);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public int getSoLuongKhachHangThang(int month, int year) {
@@ -512,192 +579,58 @@ public class HoaDon_DAO {
         return count;
     }
 
-    public String generateID(NhanVien nv) {
-        String result = "HD";
-        LocalDate time = LocalDate.now();
-        DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("ddMMyyyy");
-
-        result += dateFormater.format(time);
-        String query = """
-                       select top 1 * from [HoaDon]
-                       where maHD like ?
-                       order by maHD desc
-                       """;
-
+    public int getSoLuongKhachHangNam(int year) {
+        int count = 0;
+        String query = "select count(maKH) as soKhachHang from HoaDon where year(ngayLap) =?";
         try {
-            PreparedStatement st = ConnectDB.conn.prepareStatement(query);
-            st.setString(1, result + "%");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                String lastID = rs.getString("maHD");
-                String sNumber = lastID.substring(lastID.length() - 2);
-                int num = Integer.parseInt(sNumber) + 1;
-                result += nv.getMaNhanVien().substring(2) + String.format("%05d", num);
-            } else {
-                result += nv.getMaNhanVien().substring(2) + String.format("%05d", 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    public HoaDon createNewOrder(NhanVien nv) throws Exception {
-        HoaDon order = new HoaDon(new HoaDon_DAO().generateID(nv));
-        order.setTrangThai(false);
-//        Chỉ hiển thị ngày lập, khi lưu sẽ lấy thời gian tại lúc bấm thanh toán
-        LocalDate now = LocalDate.now();
-        order.setNgayLap(now);
-        return order;
-    }
-
-    public ArrayList<HoaDon> getAllOrderInAcountingVoucher(String maKetToan) {
-        ArrayList<HoaDon> list = new ArrayList<>();
-
-        try {
-            ConnectDB.connect();
-            String sql = "SELECT * FROM HoaDon where maKetToan = ?";
-
-            PreparedStatement ps = ConnectDB.conn.prepareStatement(sql);
-            ps.setString(1, maKetToan);
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
+            ps.setInt(1, year);  // Set the month parameter
+            // Set the year parameter
             ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                String maHD = rs.getString("maHD");
-                LocalDate ngayLap = rs.getDate("ngayLap").toLocalDate();
-                double tongTien = rs.getDouble("tongTien");
-
-                String maVoucher = rs.getString("maVoucher");
-                String maKhachHang = rs.getString("maKH");
-                String maNhanVien = rs.getString("maNhanVien");
-                KetToan ketToan = new KetToan_DAO().getOne(rs.getString("maKetToan"));
-                boolean atm = rs.getBoolean("atm");
-                double tienDaDua = rs.getDouble("tienDaDua");
-                boolean trangThai = rs.getBoolean("trangThai");
-                ArrayList<ChiTietHoaDon> listCTHD = this.getChiTietHoaDon(maHD);
-                Voucher voucher = new Voucher_DAO().getVoucher(maVoucher);  // Lấy thông tin Voucher
-                KhachHang khachHang = new KhachHang_DAO().getKhachHang(maKhachHang); // Lấy thông tin khách hàng
-                NhanVien nhanVien = new NhanVien_DAO().getNhanVien(maNhanVien); // Lấy thông tin nhân viên
-
-                HoaDon hoaDon = new HoaDon(maHD, ngayLap, tongTien, voucher, khachHang, nhanVien, ketToan, listCTHD, atm, tienDaDua, trangThai);
-                list.add(hoaDon);
+            if (rs.next()) {
+                count = rs.getInt("soKhachHang");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return count;
     }
 
-    public boolean updateOrderAcountingVoucher(String orderID, String acountingVoucherID) {
-        try {
-            String sql = "UPDATE [HoaDon] SET maKetToan = ? WHERE maHD = ?";
-            PreparedStatement preparedStatement = ConnectDB.conn.prepareStatement(sql);
-            preparedStatement.setString(1, acountingVoucherID);
-            preparedStatement.setString(2, orderID);
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public List<HoaDon> getHoaDonSuggestions(String keyword) {
-        List<HoaDon> list = new ArrayList<>();
-        String query = "SELECT * FROM HoaDon WHERE maHD LIKE ?";
+    public int getSoHoaDonTheoKhachHang(String maKH) {
+        int count = 0;
+        String query = "select count(maHD) as soHoaDon "
+                + "from HoaDon "
+                + "where maKH=?";
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
-            ps.setString(1, "%" + keyword + "%");
+            ps.setString(1, maKH);  // Set the month parameter
+
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDon hd = new HoaDon(
-                        rs.getString("maHD")
-                );
-                list.add(hd);
+            if (rs.next()) {
+                count = rs.getInt("soHoaDon");
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return list;
+        return count;
     }
 
-    public ArrayList<HoaDon> orderListWithFilter(String orderID, String customerID, String phoneNumber, String priceFrom, String priceTo, java.util.Date orderFrom, java.util.Date orderTo) {
-        ArrayList<HoaDon> list = this.getAllHoaDon();
-        //for(Order order:list){
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).isTrangThai()== false) {
-                list.remove(i);
-            }
-        }
-        ArrayList<HoaDon> xoa = new ArrayList<>();
+    public double getDoanhThuTheoKhachHang(String maKH) {
+        double count = 0;
+        String query = "select SUM(tongTien) as doanhThu "
+                + "from HoaDon "
+                + "where maKH=?";
+        try {
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(query);
+            ps.setString(1, maKH);  // Set the month parameter
 
-        if (phoneNumber.trim().length() > 0) {
-            for (HoaDon order : list) {
-                HoaDon od = this.getHoaDon(order.getMaHD());
-                KhachHang ct = new KhachHang_DAO().getKhachHang(od.getKhachHang().getMaKH());
-                if (!ct.getSdt().equals(phoneNumber)) {
-                    xoa.add(order);
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getDouble("doanhThu");
             }
-            list.removeAll(xoa);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        xoa.clear();
-        if (orderID.trim().length() > 0) {
-            for (HoaDon order : list) {
-                if (!order.getMaHD().equals(orderID)) {
-                    xoa.add(order);
-                }
-            }
-            list.removeAll(xoa);
-        }
-        xoa.clear();
-        if (customerID.trim().length() > 0) {
-
-            for (HoaDon order : list) {
-                if (!order.getKhachHang().getTenKhachHang().equals(customerID)) {
-                    xoa.add(order);
-                }
-            }
-            list.removeAll(xoa);
-        }
-        xoa.clear();
-        if (priceFrom.trim().length() > 0) {
-            for (HoaDon order : list) {
-                if (order.getTongTien()< Double.parseDouble(priceFrom)) {
-                    xoa.add(order);
-                }
-            }
-            list.removeAll(xoa);
-        }
-        xoa.clear();
-        if (priceTo.trim().length() > 0) {
-            for (HoaDon order : list) {
-                if (order.tinhThanhTien()> Double.parseDouble(priceTo)) {
-                    xoa.add(order);
-                }
-            }
-            list.removeAll(xoa);
-        }
-        xoa.clear();
-
-        for (HoaDon order : list) {
-            if (Date.valueOf(order.getNgayLap()).before(orderFrom)) {
-                xoa.add(order);
-            }
-        }
-        list.removeAll(xoa);
-
-        xoa.clear();
-
-        for (HoaDon order : list) {
-            if (Date.valueOf(order.getNgayLap()).after(orderTo)) {
-                xoa.add(order);
-            }
-        }
-        xoa.clear();
-        list.removeAll(xoa);
-
-        return list;
+        return count;
     }
 }

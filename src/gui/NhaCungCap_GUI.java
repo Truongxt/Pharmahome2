@@ -20,8 +20,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import main.Main;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
@@ -226,9 +228,14 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel15.setText("Trạng thái:");
 
-        rd_dangLamViec.setText("Đang làm việc");
+        rd_dangLamViec.setText("Đang hoạt động");
+        rd_dangLamViec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rd_dangLamViecActionPerformed(evt);
+            }
+        });
 
-        rd_nghiViec.setText("Nghỉ việc");
+        rd_nghiViec.setText("Ngưng hoạt động");
         rd_nghiViec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rd_nghiViecActionPerformed(evt);
@@ -237,7 +244,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
 
         btn_lamMoi.setFont(btn_lamMoi.getFont().deriveFont((float)14));
         btn_lamMoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nhanvien/remove.png"))); // NOI18N
-        btn_lamMoi.setText("Xóa trắng");
+        btn_lamMoi.setText("Làm mới");
         btn_lamMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_lamMoiActionPerformed(evt);
@@ -393,7 +400,11 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
 
     private void btn_locActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_locActionPerformed
         model.setRowCount(0);
-        String sdt = jtf_soDienThoai.getText();
+        String sdt = jtf_timSoDienThoai.getText();
+        if (sdt.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập số điện thoại cần tìm kiếm!");
+            return;
+        }
         NhaCungCap ncc = new NhaCungCap_DAO().timTheoSDT(sdt);
         Object[] obj = initObject(ncc);
         model.addRow(obj);
@@ -412,7 +423,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
             obj[5] = "Đang hoạt động";
 
         } else {
-            obj[5] = "không hoạt động";
+            obj[5] = "Ngưng hoạt động";
         }
         return obj;
     }
@@ -425,16 +436,21 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
     }//GEN-LAST:event_rd_nghiViecActionPerformed
 
     private void btn_lamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lamMoiActionPerformed
-        jtf_manhacungcap.setText("");
-        jtf_tenNhaCungCap.setText("");
-        jtf_diaChi.setText("");
-        jtf_soDienThoai.setText("");
-        jtf_email.setText("");
-//        ButtonGroup.clearSelection();
+        try {
+            Main.app.refeshSup();
+        } catch (SQLException ex) {
+            Logger.getLogger(NhaCungCap_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(NhaCungCap_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_lamMoiActionPerformed
 
     private void btn_capNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capNhatActionPerformed
         int index = tbl_nhaCungCap.getSelectedRow();
+        if (index == -1) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng chọn nhà cung cấp cần cập nhật");
+            return;
+        }
         String maNCC = tbl_nhaCungCap.getValueAt(index, 0) + "";
         NhaCungCap ncc = NhaCungCap_DAO.getNhaCungCap(maNCC);
         String tenNCC = jtf_tenNhaCungCap.getText();
@@ -445,6 +461,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
         if (rd_nghiViec.isSelected()) {
             trangThai = false;
         }
+
         if (maNCC.isEmpty() || tenNCC.isEmpty() || soDT.isEmpty() || diaChi.isEmpty() || email.isEmpty()) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập đầy đủ thông tin");
             return;
@@ -506,10 +523,14 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập đầy đủ thông tin");
             return;
         }
-        NhaCungCap ncc = new NhaCungCap(maNCC, tenNCC, soDienThoai, diaChi, email, trangThai);
+        if (!rd_nghiViec.isSelected() && !rd_dangLamViec.isSelected()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng chọn trạng thái của nhà cung cấp");
+            return;
+        }
+        NhaCungCap ncc = new NhaCungCap(maNCC, tenNCC, diaChi, email, soDienThoai, trangThai);
         Object obj[] = initObject(ncc);
         if (NhaCungCap_DAO.create(ncc)) {
-            JOptionPane.showConfirmDialog(this, "Thêm thành công", "Xác nhân", JOptionPane.DEFAULT_OPTION);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, "Thêm thành công");
             model.addRow(obj);
         }
 
@@ -535,6 +556,10 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_tbl_nhaCungCapMouseClicked
+
+    private void rd_dangLamViecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rd_dangLamViecActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rd_dangLamViecActionPerformed
     public void createExcel(ArrayList<NhaCungCap> listEmp, String filePath) throws IOException {
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         SXSSFSheet sheet = workbook.createSheet("Danh sách nhân viên");
