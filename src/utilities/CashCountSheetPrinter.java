@@ -205,8 +205,8 @@ public class CashCountSheetPrinter {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             document.add(new Paragraph(String.format("Mã phiếu:  %s", bangKiemTien.getMaBangKiemTien()), font));
             document.add(new Paragraph(String.format("Ngày tạo:  %s", dateFormat.format(bangKiemTien.getNgayKetThuc())), font));
-            document.add(new Paragraph(String.format("Nhân viên kiểm:  %s", bangKiemTien.getListChiTietBangKiemTien().get(0).getNhanVien()), font));
-            document.add(new Paragraph(String.format("Nhân viên giám sát:  %s", bangKiemTien.getListChiTietBangKiemTien().get(1).getNhanVien()), font));
+            document.add(new Paragraph(String.format("Nhân viên kiểm:  %s", bangKiemTien.getListChiTietBangKiemTien().get(0).getNhanVien().getTenNhanVien()), font));
+            document.add(new Paragraph(String.format("Nhân viên giám sát:  %s", bangKiemTien.getListChiTietBangKiemTien().get(1).getNhanVien().getTenNhanVien()), font));
             document.add(separator);
 
 //          Order detail  

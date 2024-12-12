@@ -253,22 +253,24 @@ public class QuenMatKhau_GUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_tenTKActionPerformed
     public boolean xacNhan() {
-        String maNhanVien = tf_tenTK.getText();
-        String email = tf_Email.getText();
+        String maNhanVien = tf_tenTK.getText().trim();
+        String email = tf_Email.getText().trim();
+      
         nv = nv_dao.timKiemTheoMa1(maNhanVien);
-        System.out.println(nv.getEmail());
+       
         if (nv == null) {
-            Notification panel = new Notification(this, Notification.Type.WARNING,
-                    Notification.Location.TOP_CENTER, "Nhập sai mã nhân viên hoặc email!!!");
-            panel.showNotification();
+         Notifications.getInstance().show(Notifications.Type.WARNING, "Nhập sai mã nhân viên hoặc email!!!");
+            System.out.println("khoong cos tk");
+                    
+            return false;
+        }
+        System.out.println(nv.getEmail()+"\n");
+        System.out.println("email TK:  "+email);
+       if (!nv.getEmail().trim().toLowerCase().equals(email.trim().toLowerCase())) {
+             Notifications.getInstance().show(Notifications.Type.WARNING, "Nhập sai mã nhân viên hoặc email!!!");
             return false;
         }
 
-        if (!nv.getEmail().equals(email)) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, "Nhập sai mã nhân viên hoặc email!!!");
-            
-            return false;
-        }
         if (!nv.isTrangThai()) {
             Notifications.getInstance().show(Notifications.Type.WARNING,  "Nhân viên đã nghĩ viêc!!!");
             

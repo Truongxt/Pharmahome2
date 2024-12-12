@@ -400,7 +400,7 @@ public class NhaCungCap_GUI extends javax.swing.JPanel {
 
     private void btn_locActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_locActionPerformed
         model.setRowCount(0);
-        String sdt = jtf_timSoDienThoai.getText();
+        String sdt = jtf_timSoDienThoai.getText().trim();
         if (sdt.isEmpty()) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Vui lòng nhập số điện thoại cần tìm kiếm!");
             return;

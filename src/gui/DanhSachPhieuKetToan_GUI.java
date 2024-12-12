@@ -107,11 +107,7 @@ public class DanhSachPhieuKetToan_GUI extends javax.swing.JPanel {
 
         jLabel2.setText("Nhân viên kiểm:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 15, 100, 30));
-
-        jTextField1.setText("jTextField1");
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 190, 30));
-
-        jTextField2.setText("jTextField1");
         jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 190, 30));
 
         jLabel3.setText("Đến ngày:");

@@ -294,15 +294,15 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel1" alignment="0" pref="28" max="32767" attributes="0"/>
-                      <Component id="jtf_sdt" alignment="0" pref="28" max="32767" attributes="0"/>
+                      <Component id="jLabel1" alignment="0" pref="25" max="32767" attributes="0"/>
+                      <Component id="jtf_sdt" alignment="0" pref="25" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel2" alignment="0" pref="28" max="32767" attributes="0"/>
-                      <Component id="jtf_tenKH" alignment="0" pref="28" max="32767" attributes="0"/>
+                      <Component id="jLabel2" alignment="0" pref="25" max="32767" attributes="0"/>
+                      <Component id="jtf_tenKH" alignment="0" pref="25" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -756,7 +756,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="214" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="208" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -821,9 +821,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="214" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="210" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="btn_themThuoc" pref="35" max="32767" attributes="0"/>
+                  <Component id="btn_themThuoc" pref="33" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>

@@ -202,8 +202,8 @@ public class AcountingVoucherPrinter {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             document.add(new Paragraph(String.format("Mã phiếu:  %s", ketToan.getMaKetToan()), font));
             document.add(new Paragraph(String.format("Ngày tạo:  %s", dateFormat.format(ketToan.getNgayBatDau()) + " đến " + dateFormat.format(ketToan.getNgayKetThuc())), font));
-            document.add(new Paragraph(String.format("Nhân viên kiểm:  %s", ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(0).getNhanVien()), font));
-            document.add(new Paragraph(String.format("Nhân viên giám sát:  %s", ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(1).getNhanVien()), font));
+            document.add(new Paragraph(String.format("Nhân viên kiểm:  %s", ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(0).getNhanVien().getTenNhanVien()), font));
+            document.add(new Paragraph(String.format("Nhân viên giám sát:  %s", ketToan.getBangKiemTien().getListChiTietBangKiemTien().get(1).getNhanVien().getTenNhanVien()), font));
             document.add(separator);
 
 //          Order detail  

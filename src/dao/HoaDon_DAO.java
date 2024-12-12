@@ -24,19 +24,27 @@ import utilities.ConvertDate;
 
 public class HoaDon_DAO {
 
-    // Phương thức tạo mới một đối tượng HoaDon
     public Boolean create(HoaDon hoaDon) {
         int n = 0;
 
         try {
-            PreparedStatement ps = ConnectDB.conn.prepareStatement("INSERT INTO HoaDon VALUES (?,?,?,?,?,?)");
+            PreparedStatement ps = ConnectDB.conn.prepareStatement("INSERT INTO HoaDon VALUES ( ?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, hoaDon.getMaHD());
             ps.setDate(2, java.sql.Date.valueOf(hoaDon.getNgayLap()));
             ps.setDouble(3, hoaDon.getTongTien());
             ps.setString(4, hoaDon.getNhanVien().getMaNhanVien());
             ps.setString(5, hoaDon.getKhachHang().getMaKH());
+            if (hoaDon.getVoucher().getMaVoucher().isEmpty()) {
+                ps.setString(6, null);
 
-            ps.setString(6, hoaDon.getVoucher().getMaVoucher());
+            } else {
+                ps.setString(6, hoaDon.getVoucher().getMaVoucher());
+
+            }
+            ps.setString(7, null);
+            ps.setBoolean(8, hoaDon.isAtm());
+            ps.setDouble(9, hoaDon.getTienDaDua());
+            ps.setBoolean(10, hoaDon.isTrangThai());
             n = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,8 +74,8 @@ public class HoaDon_DAO {
                 Voucher voucher = new Voucher_DAO().getVoucher(maVoucher);  // Lấy thông tin Voucher
                 KhachHang khachHang = new KhachHang_DAO().getKhachHang(maKhachHang); // Lấy thông tin khách hàng
                 NhanVien nhanVien = new NhanVien_DAO().getNhanVien(maNhanVien); // Lấy thông tin nhân viên
-
-                HoaDon hoaDon = new HoaDon(maHD, ngayLap, tongTien, voucher, khachHang, nhanVien);
+                ArrayList<ChiTietHoaDon> listCTHD = this.getChiTietHoaDon(maHD);
+                HoaDon hoaDon = new HoaDon(maHD, ngayLap, tongTien, voucher, khachHang, nhanVien, listCTHD);
                 list.add(hoaDon);
             }
         } catch (SQLException e) {
@@ -107,13 +115,28 @@ public class HoaDon_DAO {
         int n = 0;
         try {
             PreparedStatement ps = ConnectDB.conn.prepareStatement(
-                    "UPDATE HoaDon SET ngayLap = ?, tongTien = ?, maVoucher = ?, maKhachHang = ?, maNhanVien = ? WHERE maHD = ?");
+                    "UPDATE HoaDon SET ngayLap = ?, tongTien = ?, maVoucher = ?, maKH = ?, maNhanVien = ?, maKetToan = ?, atm = ?, tienDaDua = ?, trangThai = ? WHERE maHD = ?");
             ps.setDate(1, java.sql.Date.valueOf(newHoaDon.getNgayLap()));
             ps.setDouble(2, newHoaDon.getTongTien());
-            ps.setString(3, newHoaDon.getVoucher().getMaVoucher());
+            if (newHoaDon.getVoucher().getMaVoucher().equalsIgnoreCase("") || newHoaDon.getVoucher() == null) {
+                ps.setString(3, null);
+            } else {
+                ps.setString(3, newHoaDon.getVoucher().getMaVoucher());
+
+            }
             ps.setString(4, newHoaDon.getKhachHang().getMaKH());
             ps.setString(5, newHoaDon.getNhanVien().getMaNhanVien());
-            ps.setString(6, maHD);
+            if (newHoaDon.getKetToan() == null || newHoaDon.getKetToan().getMaKetToan().equalsIgnoreCase("")) {
+                ps.setString(6, null);
+
+            } else {
+                ps.setString(6, newHoaDon.getKetToan().getMaKetToan());
+
+            }
+            ps.setBoolean(7, newHoaDon.isAtm());
+            ps.setDouble(8, newHoaDon.getTienDaDua());
+            ps.setBoolean(9, newHoaDon.isTrangThai());
+            ps.setString(10, maHD);
             n = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -326,7 +349,6 @@ public class HoaDon_DAO {
             }
 
             PreparedStatement ps = ConnectDB.conn.prepareStatement(query.toString());
-            System.out.println(query);
 
             if (!maHD.equalsIgnoreCase("")) {
                 ps.setString(index++, maHD);
@@ -633,4 +655,38 @@ public class HoaDon_DAO {
         }
         return count;
     }
+
+    public ArrayList<HoaDon> getAllHoaDonTrongKetToan(Date ngayBatDau, Date ngayKetThuc) {
+        ArrayList<HoaDon> list = new ArrayList<>();
+
+        try {
+            ConnectDB.connect();
+            String sql = "SELECT * FROM HoaDon where ngayLap between ? and ?";
+            PreparedStatement ps = ConnectDB.conn.prepareStatement(sql);
+            ps.setDate(1, ngayBatDau);
+            ps.setDate(2, ngayKetThuc);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String maHD = rs.getString("maHD");
+                LocalDate ngayLap = rs.getDate("ngayLap").toLocalDate();
+                double tongTien = rs.getDouble("tongTien");
+
+                String maVoucher = rs.getString("maVoucher");
+                String maKhachHang = rs.getString("maKH");
+                String maNhanVien = rs.getString("maNhanVien");
+
+                Voucher voucher = new Voucher_DAO().getVoucher(maVoucher);  // Lấy thông tin Voucher
+                KhachHang khachHang = new KhachHang_DAO().getKhachHang(maKhachHang); // Lấy thông tin khách hàng
+                NhanVien nhanVien = new NhanVien_DAO().getNhanVien(maNhanVien); // Lấy thông tin nhân viên
+                ArrayList<ChiTietHoaDon> listCTHD = this.getChiTietHoaDon(maHD);
+                HoaDon hoaDon = new HoaDon(maHD, ngayLap, tongTien, voucher, khachHang, nhanVien, listCTHD);
+                list.add(hoaDon);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

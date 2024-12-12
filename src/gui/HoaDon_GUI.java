@@ -25,6 +25,7 @@ import entity.Thuoc;
 import entity.Voucher;
 import java.awt.HeadlessException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -96,7 +97,7 @@ public class HoaDon_GUI extends javax.swing.JPanel {
 
         };
 
-        model_cart = new DefaultTableModel(new String[]{"STT","Mã Thuốc", "Tên thuốc", "Số lượng", "Đơn giá", "Thành tiền"}, 0) {
+        model_cart = new DefaultTableModel(new String[]{"STT", "Mã Thuốc", "Tên thuốc", "Số lượng", "Đơn giá", "Thành tiền"}, 0) {
             @Override
             // cho phép sửa ô số lượng
             public boolean isCellEditable(int row, int column) {
@@ -131,7 +132,6 @@ public class HoaDon_GUI extends javax.swing.JPanel {
         if (listCTHD != null) {
             for (ChiTietHoaDon ct : listCTHD) {
                 doanhThu = doanhThu + ct.thanhTien();
-                System.out.println(ct.getThuoc().getMaThuoc() + "Số lượng :" + ct.getSoLuong());
             }
         }
         jtf_khachTra.setText(doanhThu + "");
@@ -534,13 +534,13 @@ public class HoaDon_GUI extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(jtf_sdt, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jtf_sdt, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(jtf_tenKH, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jtf_tenKH, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addGap(24, 24, 24))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin hóa đơn", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
@@ -838,7 +838,7 @@ public class HoaDon_GUI extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -881,9 +881,9 @@ public class HoaDon_GUI extends javax.swing.JPanel {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_themThuoc, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(btn_themThuoc, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -963,7 +963,8 @@ public class HoaDon_GUI extends javax.swing.JPanel {
     private void jtf_sdtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_sdtKeyReleased
         int key = evt.getKeyCode();
         if (key == 10) {
-            kh = kh_DAO.getKhachHangSDT(jtf_sdt.getText());
+            kh = kh_DAO.getKhachHangSDT(jtf_sdt.getText().trim());
+
             if (kh != null) {
                 jtf_tenKH.setText(kh.getTenKhachHang());
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "Đã tìm thấy khách hàng");
@@ -977,11 +978,12 @@ public class HoaDon_GUI extends javax.swing.JPanel {
     //khoi tao object cho sp
     public Object[] initObjectSP(Thuoc t, int soLuong, int stt) {
         Object[] obj = new Object[6];
+        DecimalFormat df = new DecimalFormat("#,##0.##");
         obj[0] = stt;
         obj[1] = t.getMaThuoc();
         obj[2] = t.getTenThuoc();
         obj[3] = soLuong;
-        obj[4] = t.getGia();
+        obj[4] = df.format(t.getGia());
         obj[5] = new ChiTietHoaDon(soLuong, t.getGia(), t, hd).thanhTien();
         return obj;
     }
@@ -1009,14 +1011,13 @@ public class HoaDon_GUI extends javax.swing.JPanel {
                 // cho biến tạm để lưu vị trí
                 int n = -1;
                 String maThuoc = tableSP.getValueAt(index, 0) + "";
-                System.out.println(maThuoc);
                 for (int i = 0; i < tableCart.getRowCount(); i++) {
-                    if(maThuoc.equalsIgnoreCase(tableCart.getValueAt(i, 1)+"")){
-                        n=i;
+                    if (maThuoc.equalsIgnoreCase(tableCart.getValueAt(i, 1) + "")) {
+                        n = i;
                         break;
                     }
                 }
-                
+
                 tableCart.setValueAt(Integer.valueOf(tableCart.getValueAt(n, 3).toString()) + 1, n, 3);
                 suaSoLuong();
                 initDoanhThu();
@@ -1055,7 +1056,6 @@ public class HoaDon_GUI extends javax.swing.JPanel {
                 Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_LEFT, "Vui lòng thêm sản phẩm trước khi nhập voucher");
 
             } else {
-                System.out.println(new Voucher_DAO().getVoucher(jtf_voucher.getText()).getNgayKetThuc());
                 if (new Voucher_DAO().getVoucher(jtf_voucher.getText()).getNgayKetThuc().isAfter(LocalDate.now())) {
 
                     Double giaGiam = new Voucher_DAO().getVoucher(jtf_voucher.getText()).getGiaGiam();
@@ -1074,7 +1074,7 @@ public class HoaDon_GUI extends javax.swing.JPanel {
     private void jtf_tenKHKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_tenKHKeyReleased
         int key = evt.getKeyCode();
         if (key == 10) {
-            kh = kh_DAO.getKhachHangSDT(jtf_sdt.getText());
+            kh = kh_DAO.getKhachHangSDT(jtf_sdt.getText().trim());
             if (kh != null) {
                 jtf_tenKH.setText(kh.getTenKhachHang());
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "Đã tìm thấy khách hàng");

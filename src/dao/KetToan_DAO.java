@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -157,15 +156,10 @@ public class KetToan_DAO {
     }
 
     public ArrayList<HoaDon> getAllHoaDon(Date start, Date end) {
-        ArrayList<HoaDon> allHoaDon = hoaDon_DAO.getAllHoaDon();
+        ArrayList<HoaDon> allHoaDon = hoaDon_DAO.getAllHoaDonTrongKetToan( new java.sql.Date(start.getTime()) , new java.sql.Date(end.getTime()));
         ArrayList<HoaDon> listHoaDon = new ArrayList<>();
-        for (HoaDon hoaDon : allHoaDon) {
-            LocalDate orderDate = hoaDon.getNgayLap();
-            if (orderDate.isBefore(ConvertDate.convert(end)) && orderDate.isAfter(ConvertDate.convert(start))) {
-                listHoaDon.add(hoaDon);
-            }
-        }
-        return listHoaDon;
+ 
+        return allHoaDon;
     }
 
     public double getDoanhThu(ArrayList<HoaDon> list) {

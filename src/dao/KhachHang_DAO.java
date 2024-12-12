@@ -90,13 +90,14 @@ public class KhachHang_DAO {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("SELECT * FROM KhachHang WHERE sdt = ?");
             ps.setString(1, soDienThoai);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 String maKhachHang = rs.getString("maKhachHang");
                 String tenKhachHang = rs.getString("tenKhachHang");
                 String sdt = rs.getString("sdt");
                 String diaChi = rs.getString("diaChi");
                 Date ngayTao = rs.getDate("ngayLapTaiKhoan");
                 KhachHang kh = new KhachHang(maKhachHang, tenKhachHang, sdt, diaChi, ngayTao);
+                return kh;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,13 +111,14 @@ public class KhachHang_DAO {
             PreparedStatement ps = ConnectDB.conn.prepareStatement("SELECT * FROM KhachHang WHERE maKhachHang = ?");
             ps.setString(1, maKH);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
+            if(rs.next()) {
                 String maKhachHang = rs.getString("maKhachHang");
                 String tenKhachHang = rs.getString("tenKhachHang");
+                System.out.println(tenKhachHang);
                 String sdt = rs.getString("sdt");
                 String diaChi = rs.getString("diaChi");
                 Date ngayTao = rs.getDate("ngayLapTaiKhoan");
-                KhachHang kh = new KhachHang(maKhachHang, tenKhachHang, sdt, diaChi, ngayTao);
+                khachHang = new KhachHang(maKhachHang, tenKhachHang, sdt, diaChi, ngayTao);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -243,7 +245,7 @@ public class KhachHang_DAO {
                 String maKhachHang = rs.getString("maKhachHang");
                 String tenKhachHang = rs.getString("tenKhachHang");
                 String sdt = rs.getString("sdt");
-                 String diaChi = rs.getString("diaChi");
+                String diaChi = rs.getString("diaChi");
                 Date ngayTaoTK = rs.getDate("NgayLapTaiKhoan");
                 KhachHang kh = new KhachHang(maKhachHang, tenKhachHang, sdt, diaChi, ngayTaoTK);
                 list.add(kh);
@@ -344,7 +346,7 @@ public class KhachHang_DAO {
             PreparedStatement ps = ConnectDB.conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) { 
+            while (rs.next()) {
                 String maKhachHang = rs.getString("maKhachHang");
                 String tenKhachHang = rs.getString("tenKhachHang");
                 String sdt = rs.getString("sdt");
