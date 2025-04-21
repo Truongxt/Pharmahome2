@@ -129,7 +129,7 @@ public class QuenMatKhau_GUI extends javax.swing.JPanel {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon_Nhan/pharmacy64.png"))); // NOI18N
 
-        tf_tenTK.setText("NVTRANVietNHan");
+        tf_tenTK.setText("NV120924006");
         tf_tenTK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_tenTKActionPerformed(evt);
@@ -139,7 +139,7 @@ public class QuenMatKhau_GUI extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Tên tài khoản");
 
-        tf_Email.setText("nhantran.03042021@gmail.com");
+        tf_Email.setText("nguyenthihanhu13082004@gmail.com ");
 
         lb_Second.setText("*");
 
@@ -267,9 +267,9 @@ public class QuenMatKhau_GUI extends javax.swing.JPanel {
         System.out.println(nv.getEmail()+"\n");
         System.out.println("email TK:  "+email);
        if (!nv.getEmail().trim().toLowerCase().equals(email.trim().toLowerCase())) {
-             Notifications.getInstance().show(Notifications.Type.WARNING, "Nhập sai mã nhân viên hoặc email!!!");
-            return false;
-        }
+    Notifications.getInstance().show(Notifications.Type.WARNING, "Nhập sai mã nhân viên hoặc email!!!");
+    return false;
+}
 
         if (!nv.isTrangThai()) {
             Notifications.getInstance().show(Notifications.Type.WARNING,  "Nhân viên đã nghĩ viêc!!!");

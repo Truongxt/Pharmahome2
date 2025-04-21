@@ -307,7 +307,7 @@ public class HoaDon_DAO {
                 LocalDate ngayLap = ConvertDate.convert(resultSet.getDate("ngayLap"));
                 Double tongTien = resultSet.getDouble("tongTien");
                 String maNV = resultSet.getString("maNhanVien");
-                String maKH = resultSet.getString("maKhachHang");
+                String maKH = resultSet.getString("maKH");
                 String maVoucher = resultSet.getString("maVoucher");
                 boolean atm = resultSet.getBoolean("atm");
                 Double tienDaDua = resultSet.getDouble("tienDaDua");

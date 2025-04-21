@@ -54,7 +54,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lb_Second" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButton3" max="32767" attributes="0"/>
+              <Component id="jButton3" pref="127" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
@@ -209,7 +209,7 @@
     </Component>
     <Component class="gui.QuenMatKhau.textfield.TextField" name="tf_tenTK">
       <Properties>
-        <Property name="text" type="java.lang.String" value="NVTRANVietNHan"/>
+        <Property name="text" type="java.lang.String" value="NV120924006"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_tenTKActionPerformed"/>
@@ -225,7 +225,7 @@
     </Component>
     <Component class="gui.QuenMatKhau.textfield.TextField" name="tf_Email">
       <Properties>
-        <Property name="text" type="java.lang.String" value="nhantran.03042021@gmail.com"/>
+        <Property name="text" type="java.lang.String" value="nguyenthihanhu13082004@gmail.com "/>
       </Properties>
     </Component>
     <Component class="gui.QuenMatKhau.textfield.TextField" name="tf_XacNhan">

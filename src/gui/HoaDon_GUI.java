@@ -921,10 +921,6 @@ public class HoaDon_GUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtf_tienKhachDuaActionPerformed
 
-    private void jtf_voucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_voucherActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtf_voucherActionPerformed
-
     private void btn_thanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_thanhToanActionPerformed
         taoHoaDon();
     }//GEN-LAST:event_btn_thanhToanActionPerformed
@@ -1049,27 +1045,6 @@ public class HoaDon_GUI extends javax.swing.JPanel {
     private void jtf_khachTraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_khachTraKeyPressed
 
     }//GEN-LAST:event_jtf_khachTraKeyPressed
-
-    private void jtf_voucherKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_voucherKeyPressed
-        if (evt.getKeyCode() == 10) {
-            if (jtf_khachTra.getText().equalsIgnoreCase("")) {
-                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_LEFT, "Vui lòng thêm sản phẩm trước khi nhập voucher");
-
-            } else {
-                if (new Voucher_DAO().getVoucher(jtf_voucher.getText()).getNgayKetThuc().isAfter(LocalDate.now())) {
-
-                    Double giaGiam = new Voucher_DAO().getVoucher(jtf_voucher.getText()).getGiaGiam();
-                    double khachHangTra = Double.valueOf(jtf_khachTra.getText());
-                    jtf_khachTra.setText((khachHangTra - (giaGiam * khachHangTra)) + "");
-                    initGoiY();
-                } else {
-                    Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_LEFT, "Vocher hết hạn sử dụng");
-
-                }
-
-            }
-        }
-    }//GEN-LAST:event_jtf_voucherKeyPressed
 
     private void jtf_tenKHKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_tenKHKeyReleased
         int key = evt.getKeyCode();
@@ -1225,6 +1200,31 @@ public class HoaDon_GUI extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_btn_xoaToanBoActionPerformed
+
+    private void jtf_voucherKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_voucherKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (jtf_khachTra.getText().equalsIgnoreCase("")) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_LEFT, "Vui lòng thêm sản phẩm trước khi nhập voucher");
+
+            } else {
+                if (new Voucher_DAO().getVoucher(jtf_voucher.getText()).getNgayKetThuc().isAfter(LocalDate.now())) {
+
+                    Double giaGiam = new Voucher_DAO().getVoucher(jtf_voucher.getText()).getGiaGiam();
+                    double khachHangTra = Double.valueOf(jtf_khachTra.getText());
+                    jtf_khachTra.setText((khachHangTra - (giaGiam * khachHangTra)) + "");
+                    initGoiY();
+                } else {
+                    Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_LEFT, "Vocher hết hạn sử dụng");
+
+                }
+
+            }
+        }
+    }//GEN-LAST:event_jtf_voucherKeyPressed
+
+    private void jtf_voucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_voucherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtf_voucherActionPerformed
     private void renderSavedOrderTable() {
         tblModel_savedOrder = new DefaultTableModel(new String[]{"Mã hóa đơn", "Tên khách hàng", "Số điện thoại", "Ngày tạo"}, 0) {
             @Override
@@ -1258,6 +1258,10 @@ public class HoaDon_GUI extends javax.swing.JPanel {
             } else {
                 hd.setTongTien(0);
 
+            }
+             if (Double.valueOf(jtf_tienKhachDua.getText()) < Double.valueOf(jtf_khachTra.getText())) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Tiền khách đưa phải lớn hơn hoặc bằng tiền phải trả");
+                return false;
             }
             hd.setKhachHang(kh);
             if (!jtf_tienKhachDua.getText().isEmpty()) {
@@ -1313,6 +1317,10 @@ public class HoaDon_GUI extends javax.swing.JPanel {
             } else {
                 hd.setTienDaDua(0);
 
+            }
+            if (Double.valueOf(jtf_tienKhachDua.getText()) < Double.valueOf(jtf_khachTra.getText())) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Tiền khách đưa phải lớn hơn hoặc bằng tiền phải trả");
+                return false;
             }
 
             if (jtf_voucher.getText().isEmpty()) {

@@ -176,7 +176,7 @@ public class Menu extends javax.swing.JPanel {
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/business.png")), "Bán hàng"));
 
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/drugs.png")), "Thuốc"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn", "Tạo hóa đơn đổi trả", "Lịch sử hóa đơn", "Lịch sử hóa đơn đổi trả"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/checklist.png")), "Hóa đơn", "Tạo hóa đơn đổi trả", "Lịch sử hóa đơn", "Lịch sử đổi trả"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/analysis.png")), "Thống kê", "Thuốc", "Khách hàng", "Doanh thu"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/computer.png")), "Báo cáo", "Phiếu kiểm tiền", "Kết toán", "Danh sách phiếu kiểm tiền", "Danh sách kết toán"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/img/end.png")), "Khách hàng"));
@@ -272,7 +272,7 @@ public class Menu extends javax.swing.JPanel {
             .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(profile2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(profile2, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

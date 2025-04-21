@@ -45,7 +45,7 @@ public class ChiTietHoaDon_DAO {
                 double donGia = rs.getDouble("donGia");
 
                 String maThuoc = rs.getString("maThuoc");
-                String maHoaDon = rs.getString("maHoaDon");
+                String maHoaDon = rs.getString("maHD");
 
                 Thuoc thuoc = new Thuoc_DAO().getThuoc(maThuoc);  // Lấy thông tin thuốc
                 HoaDon hoaDon = new HoaDon_DAO().getHoaDon(maHoaDon); // Lấy thông tin hóa đơn
